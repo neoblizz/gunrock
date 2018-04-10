@@ -1,0 +1,111 @@
+<h1 id='release-checklist-without-the-automation-script'>Release checklist without the automation script</h1>
+<p>This instruction is after the coding phase. First make sure that the code for the new release pass every test and is frozen.</p>
+
+<ul>
+<li>update release notes (and related docs if necessary).</li>
+<li>update version info in CMakeLists.txt:</li>
+</ul>
+
+<p><code>set(gunrock_VERSION_MAJOR major_num)</code></p>
+
+<p><code>set(gunrock_VERSION_MINOR minor_num)</code></p>
+
+<p><code>set(gunrock_VERSION_PATCH patch_num)</code>
+- update doxygen version info in doc/gunrock.doxygen</p>
+
+<p><code>PROJECT_NUMBER = version_number</code>
+- run &#39;doxygen gunrock.doxygen&#39; in gunrock_dir/doc to generate new docs (remember to remove <strong>ALL</strong>
+  the warnings in the warn.log file)</p>
+
+<ul>
+<li>Update gh-pages branch</li>
+</ul>
+
+<p><code>git checkout gh-pages</code></p>
+
+<p>rename generated html: <code>cd doc &amp;&amp; mv html version_number</code> (for example, for 0.4 release, <code>mv html 0.4</code>)</p>
+
+<p>make a symbolic link from <code>latest</code> to the version number you are releasing (for example, <code>ln -sf 0.4 latest</code>)</p>
+
+<p>If you have additional resources (like Vega graphs), remember to copy them to gh-pages branch as well. 
+  The location will depend on how you referenced those resources in the generated HTML.</p>
+
+<p>~~edit the index.html if necessary (TODO: find a smart way to sync README.md and gh-page&#39;s index.html automatically.)~~</p>
+
+<p><code>git add -f ./version_number/* &amp;&amp; git commit -am &quot;updated docs&quot; &amp;&amp; git push origin gh-pages</code></p>
+
+<ul>
+<li>Sync dev with master
+<code>git checkout master</code></li>
+</ul>
+
+<p><code>git pull origin dev</code></p>
+
+<p>merge conflict</p>
+
+<p><code>git commit -am &quot;merged conflict&quot;</code></p>
+
+<p><code>git pull</code></p>
+
+<p><code>git push origin master</code></p>
+
+<ul>
+<li>Create the release tag and new release.</li>
+</ul>
+<h1 id='new-release-with-the-documentation-automation-script'>New release with the documentation automation script</h1>
+<p>A bash script releasedoc.sh is provided to automate most of the steps above.</p>
+
+<p>Basically, you still need to update CMakeLists.txt manually (this serves as the
+global version number). Run ./releasedoc.sh in the &#39;docs&#39; folder, it will
+automatically update PROJECT_NUMBER in gunrock.doxygen, 
+run doxygen, check if there are warnings, create a new folder for the latest 
+version of documentation inside the gh-pages branch with freshly generated
+documentation pages and point the &quot;latest&quot; symbolic link to it. 
+It will commit those changes, but won&#39;t push the new commit to the 
+upstream; you still need to manually do that after verifying everything is good.</p>
+
+<p>The following warnings during the release process can be safely ignored:</p>
+<pre class="highlight plaintext"><code>warning: unable to rmdir externals/cub: Directory not empty
+warning: unable to rmdir externals/moderngpu: Directory not empty
+</code></pre>
+<p>It is the expected behavior of git with external repositories (in this case,
+cub and moderngpu).</p>
+<h1 id='adding-a-new-page'>Adding a new page</h1>
+<p>To add a new page, just create a new Markdown file and write the things you want,
+then add that file to the &quot;INPUT&quot; list in gunrock.doxygen (near line 680).
+To preview the new page, run <code>doxygen gunrock.doxygen</code> and point your browser to
+docs/html/pages.html. When you are ready, run ./releasedoc.sh and that page will
+be added to documentation of the latest version of Gunrock.</p>
+
+<p>If you want to add Vega graphs in your Markdown, please take a look at the examples in
+vegademos.md. A vega graph is just a JavaScript snippet inside any Markdown files 
+that are used by Doxygen. The easiest example would be: </p>
+<pre class="highlight plaintext"><code>\htmlonly
+&lt;div id="verticalbar"&gt;&lt;/div&gt;
+&lt;script type="text/javascript"&gt;
+plotjson("verticalbar", "../graphs/vertical_bar.json");
+&lt;/script&gt;
+\endhtmlonly
+</code></pre>
+<p>The JSON files should be put into the &quot;docs/graphs&quot; folder, and they should be 
+referenced as &quot;../graphs/file_name.json&quot;. 
+releasedoc.sh will copy them to the &quot;graphs&quot; folder inside gh-pages for you.</p>
+
+<p>For more examples on using a Vega graph, please take a look at <code>doc/vegademo.md</code>.</p>
+<h1 id='making-changes-to-the-documentation-pages-of-an-existing-release'>Making changes to the documentation pages of an existing release</h1>
+<p>Just modify the Markdowns as you wish. To preview, run <code>doxygen gunrock.doxygen</code> 
+and point your browser to the page you modified. When you are ready, 
+just run ./releasedoc.sh and that page will
+be updated in the documentation of the latest version of Gunrock.</p>
+
+<p>In this case, because a folder containing documentation for the current version 
+exists in gh-pages branch, releasedoc.sh will remove it and replace it with all 
+freshly generated pages with new changes. Although we completely remove the old 
+documentation folder and replace it with a new one, git will be smart enough to 
+figure out the differences between old and new HTML files, and only make an 
+incremental update. Please note that the timestamps on all generated HTML pages
+will change after you run releasedoc.sh.</p>
+
+<p>If you just need to update a Vega graph, you can just update the JSON inside
+&quot;graphs&quot; folder, and then run ./releasedoc.sh (or manually copy your new JSON
+to the &quot;graphs&quot; folder in the gh-pages branch and overwrite the old one).</p>

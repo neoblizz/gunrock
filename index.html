@@ -1,15 +1,1181 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-	<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-	<meta http-equiv="X-UA-Compatible" content="IE=9"/>
-	<meta http-equiv="Refresh" content="0; url=http://gunrock.github.io/gunrock/doc/latest/index.html" /> 
-	<script type="text/javascript">
-			window.location.href = "http://gunrock.github.io/gunrock/doc/latest/index.html"
-	</script>
-</head>
-<body>
-If you are not redirected automatically, follow this <a href='http://gunrock.github.io/gunrock/doc/latest/index.html'>link to Gunrock project page</a>
-</body>
-</html>
 
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Gunrock</title>
+
+    <style>
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight .gh {
+  color: #999999;
+}
+.highlight .sr {
+  color: #f6aa11;
+}
+.highlight .go {
+  color: #888888;
+}
+.highlight .gp {
+  color: #555555;
+}
+.highlight .gs {
+}
+.highlight .gu {
+  color: #aaaaaa;
+}
+.highlight .nb {
+  color: #f6aa11;
+}
+.highlight .cm {
+  color: #75715e;
+}
+.highlight .cp {
+  color: #75715e;
+}
+.highlight .c1 {
+  color: #75715e;
+}
+.highlight .cs {
+  color: #75715e;
+}
+.highlight .c, .highlight .cd {
+  color: #75715e;
+}
+.highlight .err {
+  color: #960050;
+}
+.highlight .gr {
+  color: #960050;
+}
+.highlight .gt {
+  color: #960050;
+}
+.highlight .gd {
+  color: #49483e;
+}
+.highlight .gi {
+  color: #49483e;
+}
+.highlight .ge {
+  color: #49483e;
+}
+.highlight .kc {
+  color: #66d9ef;
+}
+.highlight .kd {
+  color: #66d9ef;
+}
+.highlight .kr {
+  color: #66d9ef;
+}
+.highlight .no {
+  color: #66d9ef;
+}
+.highlight .kt {
+  color: #66d9ef;
+}
+.highlight .mf {
+  color: #ae81ff;
+}
+.highlight .mh {
+  color: #ae81ff;
+}
+.highlight .il {
+  color: #ae81ff;
+}
+.highlight .mi {
+  color: #ae81ff;
+}
+.highlight .mo {
+  color: #ae81ff;
+}
+.highlight .m, .highlight .mb, .highlight .mx {
+  color: #ae81ff;
+}
+.highlight .sc {
+  color: #ae81ff;
+}
+.highlight .se {
+  color: #ae81ff;
+}
+.highlight .ss {
+  color: #ae81ff;
+}
+.highlight .sd {
+  color: #e6db74;
+}
+.highlight .s2 {
+  color: #e6db74;
+}
+.highlight .sb {
+  color: #e6db74;
+}
+.highlight .sh {
+  color: #e6db74;
+}
+.highlight .si {
+  color: #e6db74;
+}
+.highlight .sx {
+  color: #e6db74;
+}
+.highlight .s1 {
+  color: #e6db74;
+}
+.highlight .s {
+  color: #e6db74;
+}
+.highlight .na {
+  color: #a6e22e;
+}
+.highlight .nc {
+  color: #a6e22e;
+}
+.highlight .nd {
+  color: #a6e22e;
+}
+.highlight .ne {
+  color: #a6e22e;
+}
+.highlight .nf {
+  color: #a6e22e;
+}
+.highlight .vc {
+  color: #ffffff;
+}
+.highlight .nn {
+  color: #ffffff;
+}
+.highlight .nl {
+  color: #ffffff;
+}
+.highlight .ni {
+  color: #ffffff;
+}
+.highlight .bp {
+  color: #ffffff;
+}
+.highlight .vg {
+  color: #ffffff;
+}
+.highlight .vi {
+  color: #ffffff;
+}
+.highlight .nv {
+  color: #ffffff;
+}
+.highlight .w {
+  color: #ffffff;
+}
+.highlight {
+  color: #ffffff;
+}
+.highlight .n, .highlight .py, .highlight .nx {
+  color: #ffffff;
+}
+.highlight .ow {
+  color: #f92672;
+}
+.highlight .nt {
+  color: #f92672;
+}
+.highlight .k, .highlight .kv {
+  color: #f92672;
+}
+.highlight .kn {
+  color: #f92672;
+}
+.highlight .kp {
+  color: #f92672;
+}
+.highlight .o {
+  color: #f92672;
+}
+    </style>
+    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
+      <script src="javascripts/all.js"></script>
+  </head>
+
+  <body class="index" data-languages="[&quot;shell&quot;,&quot;c&quot;]">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png" alt="Navbar" />
+      </span>
+    </a>
+    <div class="toc-wrapper">
+      <img src="images/logo.png" class="logo" alt="Logo" />
+        <div class="lang-selector">
+              <a href="#" data-language-name="shell">shell</a>
+              <a href="#" data-language-name="c">c</a>
+        </div>
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <div id="toc" class="toc-list-h1">
+          <li>
+            <a href="#gunrock" class="toc-h1 toc-link" data-title="gunrock">Gunrock</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#links-for-gunrock-source-code" class="toc-h2 toc-link" data-title="links-for-gunrock-source-code">Links for Gunrock source code</a>
+                  </li>
+                  <li>
+                    <a href="#getting-started-with-gunrock" class="toc-h2 toc-link" data-title="getting-started-with-gunrock">Getting Started with Gunrock</a>
+                  </li>
+                  <li>
+                    <a href="#results-and-analysis" class="toc-h2 toc-link" data-title="results-and-analysis">Results and Analysis</a>
+                  </li>
+                  <li>
+                    <a href="#reporting-problems" class="toc-h2 toc-link" data-title="reporting-problems">Reporting Problems</a>
+                  </li>
+                  <li>
+                    <a href="#publications" class="toc-h2 toc-link" data-title="publications">Publications</a>
+                  </li>
+                  <li>
+                    <a href="#presentations" class="toc-h2 toc-link" data-title="presentations">Presentations</a>
+                  </li>
+                  <li>
+                    <a href="#gunrock-developers" class="toc-h2 toc-link" data-title="gunrock-developers">Gunrock Developers</a>
+                  </li>
+                  <li>
+                    <a href="#acknowledgments" class="toc-h2 toc-link" data-title="acknowledgments">Acknowledgments</a>
+                  </li>
+                  <li>
+                    <a href="#copyright-and-software-license" class="toc-h2 toc-link" data-title="copyright-and-software-license">Copyright and Software License</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#building-gunrock" class="toc-h1 toc-link" data-title="building-gunrock">Building Gunrock</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#installation" class="toc-h2 toc-link" data-title="installation">Installation</a>
+                  </li>
+                  <li>
+                    <a href="#prerequisites" class="toc-h2 toc-link" data-title="prerequisites">Prerequisites</a>
+                  </li>
+                  <li>
+                    <a href="#compilation" class="toc-h2 toc-link" data-title="compilation">Compilation</a>
+                  </li>
+                  <li>
+                    <a href="#generating-datasets" class="toc-h2 toc-link" data-title="generating-datasets">Generating Datasets</a>
+                  </li>
+                  <li>
+                    <a href="#hardware" class="toc-h2 toc-link" data-title="hardware">Hardware</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#why-gunrock" class="toc-h1 toc-link" data-title="why-gunrock">Why Gunrock?</a>
+          </li>
+          <li>
+            <a href="#methodology-for-graph-analytics-performance" class="toc-h1 toc-link" data-title="methodology-for-graph-analytics-performance">Methodology for Graph Analytics Performance</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#bfs" class="toc-h2 toc-link" data-title="bfs">BFS</a>
+                  </li>
+                  <li>
+                    <a href="#sssp" class="toc-h2 toc-link" data-title="sssp">SSSP</a>
+                  </li>
+                  <li>
+                    <a href="#bc" class="toc-h2 toc-link" data-title="bc">BC</a>
+                  </li>
+                  <li>
+                    <a href="#pagerank" class="toc-h2 toc-link" data-title="pagerank">PageRank</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#programming-model" class="toc-h1 toc-link" data-title="programming-model">Programming Model</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#operators" class="toc-h2 toc-link" data-title="operators">Operators</a>
+                  </li>
+                  <li>
+                    <a href="#creating-a-new-graph-primitive" class="toc-h2 toc-link" data-title="creating-a-new-graph-primitive">Creating a New Graph Primitive</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#git-forking-workflow" class="toc-h1 toc-link" data-title="git-forking-workflow">Git Forking Workflow</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#how-forking-workflow-works" class="toc-h2 toc-link" data-title="how-forking-workflow-works">How Forking Workflow Works?</a>
+                  </li>
+                  <li>
+                    <a href="#gunrock-39-s-forking-workflow" class="toc-h2 toc-link" data-title="gunrock-s-forking-workflow">Gunrock's Forking Workflow:</a>
+                  </li>
+                  <li>
+                    <a href="#how-to-contribute" class="toc-h2 toc-link" data-title="how-to-contribute">How to contribute?</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#road-map" class="toc-h1 toc-link" data-title="road-map">Road Map</a>
+          </li>
+          <li>
+            <a href="#how-to-write-googletest-for-gunrock" class="toc-h1 toc-link" data-title="how-to-write-googletest-for-gunrock">How to write GoogleTest for Gunrock?</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#example-test-using-googletest" class="toc-h2 toc-link" data-title="example-test-using-googletest">Example Test Using GoogleTest</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#results" class="toc-h1 toc-link" data-title="results">Results</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#general-remarks" class="toc-h2 toc-link" data-title="general-remarks">General remarks</a>
+                  </li>
+                  <li>
+                    <a href="#breadth-first-search-bfs" class="toc-h2 toc-link" data-title="breadth-first-search-bfs">Breadth-First Search (BFS)</a>
+                  </li>
+                  <li>
+                    <a href="#page-rank-pr" class="toc-h2 toc-link" data-title="page-rank-pr">Page Rank (PR)</a>
+                  </li>
+                  <li>
+                    <a href="#hardware" class="toc-h2 toc-link" data-title="hardware">Hardware</a>
+                  </li>
+                  <li>
+                    <a href="#software" class="toc-h2 toc-link" data-title="software">Software</a>
+                  </li>
+                  <li>
+                    <a href="#gunrock-version" class="toc-h2 toc-link" data-title="gunrock-version">Gunrock version</a>
+                  </li>
+              </ul>
+          </li>
+      </div>
+        <ul class="toc-footer">
+            <li><a href='https://github.com/gunrock/gunrock'>Gunrock; GPU Graph Analytics</a></li>
+            <li>Gunrock © 2018 The Regents of the University of California.</li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        <h1 id='gunrock'>Gunrock</h1>
+<p><strong>Gunrock</strong> <a href="http://mario.ece.ucdavis.edu:8080/job/gunrock/job/dev/"><img src="http://mario.ece.ucdavis.edu:8080/buildStatus/icon?job=gunrock/dev" alt="Build Status" /></a> is a CUDA library for graph-processing designed specifically for the
+GPU. It uses a high-level, bulk-synchronous, data-centric abstraction focused
+on operations on a vertex or edge frontier. Gunrock achieves a balance between
+performance and expressiveness by coupling high performance GPU computing
+primitives and optimization strategies with a high-level programming model
+that allows programmers to quickly develop new graph primitives with small
+code size and minimal GPU programming knowledge.</p>
+
+<p>For more details, please visit our
+<a href="http://gunrock.github.io/">website</a>,
+read <a href="http://gunrock.github.io/gunrock/doc/latest/why-gunrock.html">Why Gunrock</a>,
+our TOPC 2017 paper
+<a href="http://escholarship.org/uc/item/9gj6r1dj">Gunrock: GPU Graph Analytics</a>,
+look at our <a href="#results">results</a>,
+and find more details in our <a href="#publications">publications</a>.
+See <a href="http://gunrock.github.io/gunrock/doc/latest/release_notes.html">Release Notes</a> to keep up with the our latest changes.</p>
+
+<p>Gunrock is featured on NVIDIA&#39;s list of <a href="https://developer.nvidia.com/gpu-accelerated-libraries">GPU Accelerated Libraries</a> as the only external library for GPU graph analytics.</p>
+<h2 id='links-for-gunrock-source-code'>Links for Gunrock source code</h2>
+<p>[ <a href="http://gunrock.github.io/gunrock/doc/latest/pages.html">Related Pages</a> |
+<a href="http://gunrock.github.io/gunrock/doc/latest/modules.html">Modules</a> |
+<a href="http://gunrock.github.io/gunrock/doc/latest/namespaces.html">Namespaces</a> |
+<a href="http://gunrock.github.io/gunrock/doc/latest/annotated.html">Data Structures</a> |
+<a href="http://gunrock.github.io/gunrock/doc/latest/files.html">Files</a> ]</p>
+<h2 id='getting-started-with-gunrock'>Getting Started with Gunrock</h2>
+<ul>
+<li><p>For Frequently Asked Questions, see the
+<a href="http://gunrock.github.io/gunrock/doc/latest/faq.html">FAQ</a>.</p></li>
+<li><p>For information on building Gunrock, see
+<a href="http://gunrock.github.io/gunrock/doc/latest/building_gunrock.html">Building Gunrock</a>.</p></li>
+<li><p>The &quot;tests&quot; subdirectory included with Gunrock has a comprehensive test
+application for most the functionality of Gunrock.</p></li>
+<li><p>For the programming model we use in Gunrock, see
+<a href="http://gunrock.github.io/gunrock/doc/latest/programming_model.html">Programming Model</a>.</p></li>
+<li><p>We have also provided code samples for how to use
+<a href="https://github.com/gunrock/gunrock/tree/master/shared_lib_tests">Gunrock&#39;s C interface</a>
+and how to
+<a href="https://github.com/gunrock/gunrock/tree/master/python">call Gunrock primitives from Python</a>,
+as well as <a href="http://gunrock.github.io/gunrock/doc/annotated_primitives/annotated_primitives.html">annotated code</a>
+for two typical graph primitives.</p></li>
+<li><p>For details on upcoming changes and features, see the <a href="http://gunrock.github.io/gunrock/doc/latest/road_map.html">Road Map</a>.</p></li>
+</ul>
+<h2 id='results-and-analysis'>Results and Analysis</h2>
+<p>We are gradually adding summaries of our results to these web pages (please let us know if you would like other comparisons). These summaries also include a table of results along with links to the configuration and results of each individual run. We detail our <a href="http://gunrock.github.io/gunrock/doc/latest/md_methodology.html">methodology for our measurements here</a>.</p>
+
+<ul>
+<li><a href="http://gunrock.github.io/gunrock/doc/latest/md_stats_engines_topc.html">Gunrock performance compared with other engines for graph analytics</a></li>
+<li><a href="http://gunrock.github.io/gunrock/doc/latest/md_stats_do_ab_random.html">Setting parameters for direction-optimized BFS</a></li>
+<li><a href="http://gunrock.github.io/gunrock/doc/latest/md_stats_gunrock_gpus.html">Gunrock results on different GPUs</a></li>
+<li><a href="http://gunrock.github.io/gunrock/doc/latest/md_stats_frontier.html">Gunrock BFS throughput as a function of frontier size</a></li>
+<li><a href="http://gunrock.github.io/gunrock/doc/latest/md_stats_mgpu_speedup.html">Multi-GPU Gunrock Speedups</a> and <a href="http://gunrock.github.io/gunrock/doc/latest/md_stats_mgpu_scalability.html">Multi-GPU Gunrock Scalability</a></li>
+<li><a href="http://gunrock.github.io/gunrock/doc/latest/md_stats_mgpu_partition.html">Multi-GPU Gunrock Partition Performance</a></li>
+<li><a href="http://gunrock.github.io/gunrock/doc/latest/md_stats_groute.html">Comparison to Groute</a></li>
+</ul>
+
+<p>For reproducibility, we maintain Gunrock configurations and results in our github <a href="https://github.com/gunrock/io/tree/master/gunrock-output">gunrock/io</a> repository.</p>
+
+<p>We are happy to run experiments with other engines, particularly if those engines output results in our JSON format / a format that can be easily parsed into JSON format.</p>
+<h2 id='reporting-problems'>Reporting Problems</h2>
+<p>To report Gunrock bugs or request features, please file an issue
+directly using <a href="https://github.com/gunrock/gunrock/issues">Github</a>.</p>
+
+<!-- TODO: Algorithm Input Size Limitations -->
+<h2 id='publications'>Publications</h2>
+<p>Yangzihao Wang, Yuechao Pan, Andrew Davidson, Yuduo Wu, Carl Yang, Leyuan Wang, Muhammad Osama, Chenshan Yuan, Weitang Liu, Andy T. Riffel, and John D. Owens. <strong>Gunrock: GPU Graph Analytics</strong>. ACM Transactions on Parallel Computing, 4(1):3:1&ndash;3:49, August 2017. [<a href="http://dx.doi.org/10.1145/3108140">DOI</a> | <a href="http://escholarship.org/uc/item/9gj6r1dj">http</a>]</p>
+
+<p>Yuechao Pan, Yangzihao Wang, Yuduo Wu, Carl Yang, and John D. Owens.
+<strong>Multi-GPU Graph Analytics</strong>.  In Proceedings of the 31st IEEE International Parallel and Distributed Processing Symposium, IPDPS 2017, pages 479&ndash;490, May/June 2017.
+[<a href="http://dx.doi.org/10.1109/IPDPS.2017.117">DOI</a> |
+<a href="http://escholarship.org/uc/item/39r145g1">http</a>]</p>
+
+<p>Yangzihao Wang, Sean Baxter, and John D. Owens. <strong>Mini-Gunrock: A Lightweight Graph Analytics Framework on the GPU</strong>. In Graph Algorithms Building Blocks, GABB 2017, pages 616&ndash;626, May 2017. [<a href="http://dx.doi.org/10.1109/IPDPSW.2017.116">DOI</a> | <a href="https://escholarship.org/uc/item/5wm061tr">http</a>]</p>
+
+<p>Leyuan Wang, Yangzihao Wang, Carl Yang, and John D. Owens. <strong>A Comparative Study on Exact Triangle Counting Algorithms on the GPU</strong>. In Proceedings of the 1st High Performance Graph Processing Workshop, HPGP &#39;16, pages 1&ndash;8, May 2016.
+[<a href="http://dx.doi.org/10.1145/2915516.2915521">DOI</a> |
+<a href="http://www.escholarship.org/uc/item/9hf0m6w3">http</a>]</p>
+
+<p>Yangzihao Wang, Andrew Davidson, Yuechao Pan, Yuduo Wu, Andy Riffel, and John D. Owens.
+<strong>Gunrock: A High-Performance Graph Processing Library on the GPU</strong>.
+In Proceedings of the 21st ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming, <a href="http://conf.researchr.org/home/ppopp-2016">PPoPP &#39;16</a>, pages 11:1&ndash;11:12, March 2016. Distinguished Paper. [<a href="http://dx.doi.org/10.1145/2851141.2851145">DOI</a> | <a href="http://escholarship.org/uc/item/6xz7z9k0">http</a>]</p>
+
+<p>Yuduo Wu, Yangzihao Wang, Yuechao Pan, Carl Yang, and John D. Owens.
+<strong>Performance Characterization for High-Level Programming Models for GPU Graph
+Analytics</strong>. In IEEE International Symposium on Workload Characterization,
+IISWC-2015, pages 66&ndash;75, October 2015. Best Paper finalist. [<a href="http://dx.doi.org/10.1109/IISWC.2015.13">DOI</a> | <a href="http://escholarship.org/uc/item/2t69m5ht">http</a>]</p>
+
+<p>Carl Yang, Yangzihao Wang, and John D. Owens.
+<strong>Fast Sparse Matrix and Sparse Vector Multiplication Algorithm on the GPU</strong>.
+In Graph Algorithms Building Blocks, GABB 2015, pages 841&ndash;847, May 2015.
+[<a href="http://dx.doi.org/10.1109/IPDPSW.2015.77">DOI</a> | <a href="http://www.escholarship.org/uc/item/1rq9t3j3">http</a>]</p>
+
+<p>Afton Geil, Yangzihao Wang, and John D. Owens.
+<strong>WTF, GPU! Computing Twitter&#39;s Who-To-Follow on the GPU</strong>.
+In Proceedings of the Second ACM Conference on Online Social Networks,
+COSN &#39;14, pages 63&ndash;68, October 2014.
+[<a href="http://dx.doi.org/10.1145/2660460.2660481">DOI</a> | <a href="http://escholarship.org/uc/item/5xq3q8k0">http</a>]</p>
+<h2 id='presentations'>Presentations</h2>
+<p>GTC 2016, Gunrock: A Fast and Programmable Multi-GPU Graph Processing Library, April 2016. [<a href="http://on-demand.gputechconf.com/gtc/2016/presentation/s6374-yangzihao-wang-gunrock.pdf">slides</a>]</p>
+
+<p>NVIDIA <a href="http://info.nvidianews.com/gunrock-webinar-reg-0416.html">webinar</a>, April 2016. [<a href="http://tinyurl.com/owens-nv-webinar-160426">slides</a>]</p>
+
+<p>GPU Technology Theater at SC15, Gunrock: A Fast and Programmable Multi-GPU Graph processing Library, November 2015. [<a href="http://images.nvidia.com/events/sc15/pdfs/SC5139-gunrock-multi-gpu-processing-library.pdf">slides</a> | <a href="http://images.nvidia.com/events/sc15/SC5139-gunrock-multi-gpu-processing-library.html">video</a>]</p>
+
+<p>GTC 2014, High-Performance Graph Primitives on the GPU: design and Implementation of Gunrock, March 2014. [<a href="http://on-demand.gputechconf.com/gtc/2014/presentations/S4609-hi-perf-graph-primitives-on-gpus.pdf">slides</a> | <a href="http://on-demand.gputechconf.com/gtc/2014/video/S4609-hi-perf-graph-primitives-on-gpus.mp4">video</a>]</p>
+<h2 id='gunrock-developers'>Gunrock Developers</h2>
+<ul>
+<li><p><a href="http://www.idav.ucdavis.edu/~yzhwang/">Yangzihao Wang</a>,
+University of California, Davis</p></li>
+<li><p><a href="https://sites.google.com/site/panyuechao/home">Yuechao Pan</a>, University of California, Davis</p></li>
+<li><p><a href="http://www.yuduowu.com/">Yuduo Wu</a>,
+University of California, Davis</p></li>
+<li><p><a href="http://web.ece.ucdavis.edu/~ctcyang/">Carl Yang</a>,
+University of California, Davis</p></li>
+<li><p><a href="http://www.ece.ucdavis.edu/~laurawly/">Leyuan Wang</a>,
+University of California, Davis</p></li>
+<li><p>Weitang Liu, University of California, Davis</p></li>
+<li><p><a href="http://www.ece.ucdavis.edu/~mosama/">Muhammad Osama</a>,
+University of California, Davis</p></li>
+<li><p>Chenshan Shari Yuan, University of California, Davis</p></li>
+<li><p>Andy Riffel, University of California, Davis</p></li>
+<li><p><a href="http://www.huan-zhang.com/">Huan Zhang</a>,
+University of California, Davis</p></li>
+<li><p><a href="http://www.ece.ucdavis.edu/~jowens/">John Owens</a>,
+University of California, Davis</p></li>
+</ul>
+<h2 id='acknowledgments'>Acknowledgments</h2>
+<p>Thanks to the following developers who contributed code: The
+connected-component implementation was derived from code written by
+Jyothish Soman, Kothapalli Kishore, and P. J. Narayanan and described
+in their IPDPSW &#39;10 paper <em>A Fast GPU Algorithm for Graph
+Connectivity</em> (<a href="http://dx.doi.org/10.1109/IPDPSW.2010.5470817">DOI</a>).
+The breadth-first search implementation and many of the utility
+functions in Gunrock are derived from the
+<a href="http://code.google.com/p/back40computing/">b40c</a> library of
+<a href="https://sites.google.com/site/duanemerrill/">Duane Merrill</a>. The
+algorithm is described in his PPoPP &#39;12 paper <em>Scalable GPU Graph
+Traversal</em> (<a href="http://dx.doi.org/10.1145/2370036.2145832">DOI</a>). Thanks
+to Erich Elsen and Vishal Vaidyanathan from
+<a href="http://www.royal-caliber.com/">Royal Caliber</a> and the <a href="http://www.onu.io/">Onu</a> Team for their discussion on
+library development and the dataset auto-generating code. Thanks to
+Adam McLaughlin for his technical discussion. Thanks to Oded Green
+for his technical discussion and an optimization in the CC primitive.
+Thanks to the <a href="https://altair-viz.github.io/">Altair</a> and <a href="https://vega.github.io/vega-lite/">Vega-lite</a> teams in the <a href="http://idl.cs.washington.edu/">Interactive Data Lab</a> at the University of Washington for graphing help. We appreciate the technical assistance, advice, and machine access from many colleagues at NVIDIA: Chandra Cheij, Joe Eaton, Michael Garland, Mark Harris, Ujval Kapasi, David Luebke, Duane Merrill, Nikolai Sakharnykh, and Cliff Woolley.</p>
+
+<p>This work was funded by the DARPA XDATA program under AFRL Contract
+FA8750-13-C-0002, by NSF awards CCF-1017399, OCI-1032859, and
+CCF-1629657, by DARPA STTR award D14PC00023, and by DARPA SBIR award
+W911NF-16-C-0020. Our XDATA principal investigator is Eric Whyne of
+<a href="http://www.data-tactics.com/">Data Tactics Corporation</a> and our DARPA
+program managers are Dr. Christopher White (2012--2014) and
+<a href="http://www.darpa.mil/staff/mr-wade-shen">Mr. Wade Shen</a>
+(2015--present). Thanks to Chris, Wade, and DARPA business manager
+Gabriela Araujo for their support during the XDATA program.</p>
+<h2 id='copyright-and-software-license'>Copyright and Software License</h2>
+<p>Gunrock is copyright The Regents of the University of
+California, 2013--2017. The library, examples, and all source code are
+released under
+<a href="http://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a>.</p>
+
+<aside class="notice">
+Switch between the tabs on the right to view code in different languages (example shell or c).
+</aside>
+<h1 id='building-gunrock'>Building Gunrock</h1>
+<p>Gunrock&#39;s current release has been tested on Linux Mint 15 (64-bit), Ubuntu 12.04, 14.04 and 15.10 with CUDA 7.5 installed, compute architecture 3.0 and g++ 4.8. We expect Gunrock to build and run correctly on other 64-bit and 32-bit Linux distributions, Mac OS, and Windows.</p>
+<h2 id='installation'>Installation</h2>
+<p><strong>Overview:</strong></p>
+
+<ul>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#compilation">Compilation</a></li>
+<li><a href="#hardware">Hardware</a></li>
+</ul>
+<h2 id='prerequisites'>Prerequisites</h2>
+<p><strong>Required Dependencies:</strong></p>
+
+<ul>
+<li><p><a href="https://developer.nvidia.com/cuda-zone">CUDA</a> (7.5 or higher) is used to implement Gunrock.</p>
+
+<ul>
+<li>Refer to NVIDIA&#39;s <a href="https://developer.nvidia.com/cuda-downloads">CUDA</a> homepage to download and install CUDA.</li>
+<li>Refer to NVIDIA <a href="http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html">CUDA C Programming Guide</a> for detailed information and examples on programming CUDA.</li>
+</ul></li>
+<li><p><a href="http://www.boost.org/users/history/version_1_58_0.html">Boost</a> (1.58 or higher) is used for for the CPU reference implementations of Connected Component, Betweenness Centrality, PageRank, Single-Source Shortest Path, and Minimum Spanning Tree.</p>
+
+<ul>
+<li>Refer to Boost <a href="http://www.boost.org/doc/libs/1_58_0/more/getting_started/unix-variants.html">Getting Started Guide</a> to install the required Boost libraries.</li>
+<li>Alternatively, you can also install Boost by running <code>/gunrock/dep/install_boost.sh</code> script (recommended installation method).</li>
+<li>Ideal location for Boost installation is <code>/usr/local/</code>. If the build cannot find your Boost library, make sure a symbolic link for boost installation exists somewhere in <code>/usr/</code> directory.</li>
+</ul></li>
+<li><p><a href="https://github.com/moderngpu/moderngpu">ModernGPU</a> and <a href="http://nvlabs.github.io/cub/">CUB</a> used as external submodules for Gunrock&#39;s APIs.</p>
+
+<ul>
+<li>You will need to download or clone ModernGPU and CUB, and place them to <code>gunrock/externals</code>.</li>
+<li>Alternatively, you can clone gunrock recursively with <code>git clone --recursive https://github.com/gunrock/gunrock</code></li>
+</ul></li>
+</ul>
+
+<blockquote>
+<p>or if you already cloned gunrock, under <code>gunrock/</code> directory</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>git submodule init
+git submodule update
+</code></pre>
+<p><strong>Optional Dependencies:</strong></p>
+
+<ul>
+<li><a href="http://glaros.dtc.umn.edu/gkhome/metis/metis/overview">METIS</a> is used as one possible partitioner to partition graphs for multi-gpu primitives implementations.
+
+<ul>
+<li>Refer to METIS <a href="http://glaros.dtc.umn.edu/gkhome/metis/metis/download">Installation Guide</a></li>
+<li>Alternatively, you can also install METIS by running <code>/gunrock/dep/install_metis.sh</code> script.</li>
+<li>If the build cannot find your METIS library, please set the <code>METIS_DLL</code> environment variable to the full path of the library.</li>
+</ul></li>
+</ul>
+<h2 id='compilation'>Compilation</h2>
+<p><strong>Simple Gunrock Compilation:</strong></p>
+
+<blockquote>
+<p>Downloading gunrock</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code><span class="c"># Using git (recursively) download gunrock</span>
+git clone --recursive https://github.com/gunrock/gunrock
+<span class="c"># Using wget to download gunrock</span>
+wget --no-check-certificate https://github.com/gunrock/gunrock/archive/master.zip
+</code></pre>
+<blockquote>
+<p>Compiling gunrock</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code><span class="nb">cd </span>gunrock
+mkdir build <span class="o">&amp;&amp;</span> <span class="nb">cd </span>build
+cmake ..
+make
+</code></pre>
+<ul>
+<li>Binary test files are available in <code>build/bin</code> directory.</li>
+<li>You can either run the test for all primitives by typing <code>make check</code> or <code>ctest</code> in the build directory, or do your own testings manually.</li>
+<li>Detailed test log from <code>ctest</code> can be found in <code>/build/Testing/Temporary/LastTest.log</code>, alternatively you can run tests with verbose option enabled <code>ctest -v</code>.</li>
+</ul>
+
+<p><strong>Advance Gunrock Compilation:</strong></p>
+
+<p>You can also compile gunrock with more specific/advanced settings using <code>cmake -D[OPTION]=ON/OFF</code>. Following options are available:</p>
+
+<ul>
+<li><strong>GUNROCK_BUILD_LIB</strong> (default: ON) - Builds main gunrock library.</li>
+<li><strong>GUNROCK_BUILD_SHARED_LIBS</strong> (default: ON) - Turn off to build for static libraries.</li>
+<li><p><strong>GUNROCK_BUILD_APPLICATIONS</strong> (default: ON) - Set off to only build one of the following primitive (GUNROCK_APP_* must be set on to build if this option is turned off.)</p>
+
+<ul>
+<li><strong>GUNROCK_APP_BC</strong> (default: OFF)</li>
+<li><strong>GUNROCK_APP_BFS</strong> (default: OFF)</li>
+<li><strong>GUNROCK_APP_CC</strong> (default: OFF)</li>
+<li><strong>GUNROCK_APP_PR</strong> (default: OFF)</li>
+<li><strong>GUNROCK_APP_SSSP</strong> (default: OFF)</li>
+<li><strong>GUNROCK_APP_DOBFS</strong> (default: OFF)</li>
+<li><strong>GUNROCK_APP_HITS</strong> (default: OFF)</li>
+<li><strong>GUNROCK_APP_SALSA</strong> (default: OFF)</li>
+<li><strong>GUNROCK_APP_MST</strong> (default: OFF)</li>
+<li><strong>GUNROCK_APP_WTF</strong> (default: OFF)</li>
+<li><strong>GUNROCK_APP_TOPK</strong> (default: OFF)</li>
+</ul></li>
+<li><p><strong>GUNROCK_MGPU_TESTS</strong> (default: OFF) - If on, tests multiple GPU primitives with <code>ctest</code>.</p></li>
+<li><p><strong>GUNROCK_GENCODE_SM&lt;&gt;</strong> (default: GUNROCK_GENCODE_SM30,35,61=ON) change to generate code for a different compute capability.</p></li>
+<li><p><strong>CUDA_VERBOSE_PTXAS</strong> (default: OFF) - ON to enable verbose output from the PTXAS assembler.</p></li>
+</ul>
+
+<blockquote>
+<p>Example for compiling gunrock with only <em>Breadth First Search (BFS)</em> primitive</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>mkdir build <span class="o">&amp;&amp;</span> <span class="nb">cd </span>build
+cmake -DGUNROCK_BUILD_APPLICATIONS<span class="o">=</span>OFF -DGUNROCK_APP_BFS<span class="o">=</span>ON ..
+make
+</code></pre><h2 id='generating-datasets'>Generating Datasets</h2>
+<p>All dataset-related code is under the <code>gunrock/dataset/</code> subdirectory. The current version of Gunrock only supports <a href="http://math.nist.gov/MatrixMarket/formats.html">Matrix-market coordinate-formatted graph</a> format. The datasets are divided into two categories according to their scale. Under the <code>dataset/small/</code> subdirectory, there are trivial graph datasets for testing the correctness of the graph primitives. All of them are ready to use. Under the <code>dataset/large/</code> subdirectory, there are large graph datasets for doing performance regression tests.
+* To download them to your local machine, just type <code>make</code> in the <code>dataset/large/</code> subdirectory.
+* You can also choose to only download one specific dataset to your local machine by stepping into the subdirectory of that dataset and typing make inside that subdirectory.</p>
+<h2 id='hardware'>Hardware</h2>
+<p><strong>Laboratory Tested Hardware:</strong> Gunrock with GeForce GTX 970, Tesla K40s. We have not encountered any trouble in-house with devices with CUDA capability &gt;= 3.0.</p>
+<h1 id='why-gunrock'>Why Gunrock?</h1>
+<p>Gunrock is a stable, powerful, and forward-looking substrate for GPU-based graph-centric research and development. Like many graph frameworks, it leverages a bulk-synchronous programming model and targets iterative convergent graph computations. We believe that today Gunrock offers both the best performance on GPU graph analytics as well as the widest range of primitives.</p>
+
+<ul>
+<li><p><strong>Gunrock has the best performance of any programmable GPU+graph library.</strong> Gunrock primitives are an order of magnitude faster than  (CPU-based) Boost, outperform any other programmable GPU-based system, and are comparable in performance to hardwired GPU graph primitive implementations. When  compared to <a href="https://github.com/jshun/ligra">Ligra</a>, a best-of-breed CPU system, Gunrock currently  matches or exceeds Ligra&#39;s 2-CPU performance with only one GPU.</p>
+
+<p>Gunrock&#39;s abstraction separates its programming model from the  low-level implementation details required to make a GPU  implementation run fast. Most importantly, Gunrock features very   powerful load-balancing capabilities that effectively address the   inherent irregularity in graphs, which is a problem we must address   in all graph analytics. We have spent significant effort developing   and optimizing these features---when we beat hardwired analytics,   the reason is load balancing---and because they are beneath the   level of the programming model, improving them makes all graph   analytics run faster without needing to expose them to programmers.</p></li>
+<li><p><strong>Gunrock&#39;s data-centric programming model is targeted at GPUs and offers advantages over other programming models.</strong> Gunrock is written in a higher-level abstraction than hardwired implementations, leveraging reuse of its fundamental operations across different graph primitives. Gunrock has a bulk-synchronous programming model that operates on a frontier of vertices or edges; unlike other GPU-based graph analytic programming models, Gunrock focuses not on sequencing <em>computation</em> but instead on sequencing <em>operations on frontier data structures</em>. This model has two main operations: <em>compute</em>, which performs a computation on every element in the current frontier, and <em>traversal</em>, which generates a new frontier from the current frontier. Traversal operations include <em>advance</em> (the new frontier is based on the neighbors of the current frontier) and <em>filter</em> (the new frontier is a programmable subset of the current frontier). We are also developing new Gunrock operations on frontier data structures, including neighbor, gather-reduce, and global operations.</p>
+
+<p>This programming model is a better fit to high-performance GPU implementations than traditional programming models adapted from CPUs. Specifically, traditional models like gather-apply-scatter (GAS) map to a suboptimal set of GPU kernels that do a poor job of capturing producer-consumer locality. With Gunrock, we can easily integrate compute steps within the same kernels as traversal steps. As well, Gunrock&#39;s frontier-centric programming model is a better match for key optimizations such as push-pull direction-optimal search or priority queues, which to date have not been implemented in other GPU frameworks, where they fit poorly into the abstraction.</p></li>
+<li><p><strong>Gunrock supports more primitives than any other programmable GPU+graph library.</strong> We currently support a wide variety of graph primitives, including traversal-based (breadth-first search, single-source shortest path); node-ranking (HITS, SALSA, PageRank); and global (connected component, minimum spanning tree). Many more algorithms are under active development (including graph coloring, maximal independent set, community detection, and graph matching).</p></li>
+<li><p><strong>Gunrock has better scalability with multiple GPUs on a node than any other graph library.</strong> We not only show <a href="http://arxiv.org/abs/1504.04804">better BFS performance on a single node than any other GPU framework</a> but also outperform other frameworks, even those customized to BFS, with up to four times as many GPUs. More importantly, our framework supports all Gunrock graph primitives rather than being customized to only one primitive.</p></li>
+<li><p><strong>Gunrock&#39;s programming model scales to multiple GPUs while still using the same code as a single-GPU primitive.</strong> Other frameworks require rewriting their primitives when moving from one to many GPUs. Gunrock&#39;s multi-GPU programming model uses single-node Gunrock code at its core so that single-GPU and multi-GPU operations can share the same codebase.</p></li>
+</ul>
+<h1 id='methodology-for-graph-analytics-performance'>Methodology for Graph Analytics Performance</h1>
+<p>We welcome comments from others on the methodology that we use for measuring Gunrock&#39;s performance.</p>
+
+<p>Currently, Gunrock is a library that requires no preprocessing. By this we mean that Gunrock inputs graphs in a &quot;standard&quot; format, e.g., compressed sparse row or coordinate, such as those available on common graph repositories (<a href="https://snap.stanford.edu/data/index.html">SNAP</a> or <a href="http://www.cise.ufl.edu/research/sparse/matrices/">SuiteSparse (UF)</a>). In our experiments, we use <a href="https://people.sc.fsu.edu/~jburkardt/data/mm/mm.html">MatrixMarket</a> format.</p>
+
+<p>Other graph libraries may benefit from preprocessing of input datasets. We would regard any manipulation of the input dataset (e.g., reordering the input or more sophisticated preprocessing such as graph coloring or  <a href="http://farkhor.github.io/CuSha/">CuSha</a>&#39;s G-Shards) to be preprocessing. We think preprocessing is an interesting future direction for Gunrock, but have not yet investigated it. We hope that any graph libraries that do preprocessing report results with both preprocessed and unmodified input datasets.</p>
+
+<p>(That being said, we do standardize input graphs in two ways: before running our experiments, we remove self-loops/duplicated edges. If the undirected flag is set, we convert the input graph to undirected. When we do so, that implies one edge in each direction, and we report edges for that graph accordingly. What we do here appears to be standard practice.)</p>
+
+<p>In general, we try to report results in two ways:</p>
+
+<ul>
+<li>Throughput, measured in edges traversed per second (TEPS). We generally use millions of TEPS (MTEPS) as our figure of merit.</li>
+<li>Runtime, typically measured in ms. We measure runtime entirely on the GPU, with the expectation that the input data is already on the GPU and the output data will be stored on the GPU. This ignores transfer times (either disk to CPU or CPU to GPU), which are independent of the graph analytics system. It is our expectation that GPU graph analytics will be most effective when (a) they are run on complex primitives and/or (b) run on sequences of primitives, either of which would mitigate transfer times. GPU graph analytics are likely not well suited to running one single simple primitive; for a simple primitive like BFS, it is more expensive to transfer the graph from CPU to GPU than it is to complete the BFS.</li>
+</ul>
+
+<p>To calculate TEPS, we require the number of edges traversed (touched), which we count dynamically. For traversal primitives, we note that non-connected components will not be visited, so the number of visited edges may be fewer than the number of edges in the graph. We note that precisely counting edges during the execution of a particular primitive may have performance implications, so we may approximate (see BFS).</p>
+
+<p>Notes on specific primitives follow.</p>
+<h2 id='bfs'>BFS</h2>
+<p>When we count the number of edges traversed, we do so by summing the number of outbound edges for each visited vertex. For forward, non-idempotent BFS, this strategy should give us an exact count, since this strategy visits every edge incident to a visited vertex. When we enable idempotence, we may visit a node more than once and hence may visit an edge more than once. For backward (pull) BFS, when we visit a vertex, we count all edges incoming to that vertex even if we find a visited predecessor before traversing all edges (and terminate early). (To do so otherwise has performance implications.) Enterprise uses the same counting strategy.</p>
+
+<p>If a comparison library does not measure MTEPS for BFS, we compute it by the number of edges visited divided by runtime; if the former is not available, we use Gunrock&#39;s edges-visited count.</p>
+<h2 id='sssp'>SSSP</h2>
+<p>In general we find MTEPS comparisons between different approaches to SSSP not meaningful: because an edge may be visited one or many times, there is no standard way to count edges traversed. Different algorithms may not only visit a very different number of edges (Dijkstra vs. Bellman-Ford will have very different edge visit counts) but may also have a different number of edges visited across different invocations of the same primitive.</p>
+
+<p>When we report Gunrock&#39;s SSSP MTEPS, we use the number of edges queued as the edge-traversal count.</p>
+
+<p>To have a meaningful SSSP experiment, it is critical to have varying edge weights. SSSP measured on uniform edge weights is not meaningful (it becomes BFS). In our experiments, we set edge weights randomly/uniformly between 1 and 64.</p>
+<h2 id='bc'>BC</h2>
+<p>If a comparison library does not measure MTEPS for BC, we compute it by twice the number of edges visited in the forward phase divided by runtime (the same computation we use for Gunrock).</p>
+<h2 id='pagerank'>PageRank</h2>
+<p>We measure PageRank elapsed time on one iteration of PageRank. (Many other engines measure results this way and it is difficult to extrapolate from this measurement to runtime of the entire algorithm.)</p>
+<h1 id='programming-model'>Programming Model</h1>
+<p>This page describes the programming model we use in Gunrock.</p>
+
+<p>Gunrock targets graph computations that are generally expressed as &quot;iterative convergent processes&quot;. By &quot;iterative,&quot; we mean operations that may require running a series of steps repeatedly; by &quot;convergent,&quot; we mean that these iterations allow us to approach the correct answer and terminate when that answer is reached. Many graph-computation programming models target a similar goal.</p>
+
+<p>Many of these programming models focus on sequencing steps of <em>computation</em>.  Gunrock differs from these programming models in its focus on <em>manipulating a data structure</em>. We call this data structure a <em>frontier</em> of vertices or edges. The frontier represents the subset of vertices or edges that is actively participating in the computation. Gunrock operators input one or more frontiers and output one or more frontiers.</p>
+
+<p>Generically, graph operations can often be expressed via a <em>push</em> abstraction (graph elements &quot;push&quot; local private updates into a shared state) or a <em>pull</em> abstraction (graph elements &quot;pull&quot; updates into their local private state) (<a href="https://htor.inf.ethz.ch/publications/index.php?pub=281">Besta et al. publication on push-vs.-pull, HPDC &#39;17</a>). Gunrock&#39;s programming model supports both of these abstractions. (For instance, Gunrock&#39;s direction-optimized breadth-first-search supports both push and pull BFS phases. <a href="https://github.com/gunrock/mini">Mini-Gunrock</a> supports pull-based BFS and PR.) Push-based approaches may or may not require synchronization (such as atomics) for correct operation; this depends on the primitive. Gunrock&#39;s idempotence optimization (within its BFS implementation) is an example of a push-based primitive that does not require atomics.</p>
+<h2 id='operators'>Operators</h2>
+<p>In the current Gunrock release, we support four operators.</p>
+
+<ul>
+<li><p>Advance: An <em>advance</em> operator generates a new frontier from the current frontier by visiting the neighbors of the current frontier. A frontier can consist of either vertices or edges, and an advance step can input and output either kind of frontier. Advance is an irregularly-parallel operation for  two reasons: 1)~different vertices in a graph have different numbers of neighbors and 2)~vertices share neighbors. Thus a vertex in an input frontier map to multiple output items. An efficient advance is the most significant challenge of a GPU implementation.</p></li>
+<li><p>Filter:  A <em>filter</em> operator generates a new frontier from the current frontier by choosing a subset of the current frontier based on programmer-specified criteria. Each input item maps to zero or one output items.</p></li>
+<li><p>Compute: A <em>compute</em> operator defines an operation on all elements (vertices or edges) in its input frontier. A programmer-specified compute operator can be used together with all three traversal operators. Gunrock performs that operation in parallel across all elements without regard to order.</p></li>
+<li><p>Segmented intersection: A <em>segmented intersection</em> operator takes two input node frontiers with the same length, or an input edge frontier, and generates both the number of total intersections and the intersected node IDs as the
+new frontier.</p></li>
+</ul>
+
+<p>We note that compute operators can often be fused with a neighboring operator into a single kernel. This increases producer-consumer locality and improves performance. Thus within Gunrock, we express compute operators as &quot;functors&quot;, which are automatically merged into their neighboring operators. Within Gunrock, we express functors in one of two flavors:</p>
+
+<ul>
+<li><p>Cond Functor:
+Cond functors input either a vertex id (as in <code>VertexCond</code>) or the source id
+and the dest id of an edge (as in <code>EdgeCond</code>). They also input data specific to
+the problem being solved to decide whether the vertex or the edge is valid in
+the outgoing frontier.</p></li>
+<li><p>Apply Functor:
+Apply functors take the same set of arguments as Cond functors, but perform
+user-specified computation on the problem-specific data.</p></li>
+</ul>
+<h2 id='creating-a-new-graph-primitive'>Creating a New Graph Primitive</h2>
+<p>To create a new graph primitive, we first put all the problem-specific data
+into a data structure. For BFS, we need a per-node label value and a per-node
+predecessor value; for CC, we need a per-edge mark value, a per-node component
+id value, etc. Then we map the algorithm into the combination of the above
+three operators. Next, we need to write different functors for these operators.
+Some graph algorithms require only one functor (BFS), but some graph algorithms
+need more (CC needs seven). Finally, we write an enactor to load the proper
+operator with the proper functor. We provide a graph primitive template. The
+problem, functor, and enactor files are under gunrock/app/sample, and the
+driver code is under tests/sample.</p>
+<h1 id='git-forking-workflow'>Git Forking Workflow</h1>
+<p>Transitioning over from <a href="http://nvie.com/posts/a-successful-git-branching-model/">Git Branching Workflow</a> suggested by Vincent Driessen at nvie to <a href="https://www.atlassian.com/git/tutorials/comparing-workflows#forking-workflow">Git Forking Workflow</a> for Gunrock.</p>
+<h2 id='how-forking-workflow-works'>How Forking Workflow Works?</h2>
+<p><img src="https://wac-cdn.atlassian.com/dam/jcr:5c0941ff-a8b5-435b-a092-2167705f1e97/01.svg?cdnVersion=hp" alt="Forking Workflow" />
+As in the other Git workflows, the Forking Workflow begins with an <strong>official public repository</strong> stored on a server. But when a new developer wants to start working on the project, they do not directly clone the official repository.
+<br><br>Instead, they <strong>fork the official repository</strong> to create a copy of it on the server. This new copy serves as their personal public repository—no other developers are allowed to push to it, but they can <strong>pull changes</strong> from it (we’ll see why this is important in a moment). After they have created their server-side copy, the developer performs a git clone to get a copy of it onto their local machine. This serves as their private development environment, just like in the other workflows.
+<br><br> When they&#39;re ready to publish a local commit, they push the commit to their own public repository—not the official one. Then, they file a pull request with the main repository, which lets the project maintainer know that an update is ready to be integrated. The <strong>pull request also serves as a convenient discussion thread</strong> if there are issues with the contributed code.
+<br><br> To integrate the feature into the official codebase, the maintainer pulls the contributor’s changes into their local repository, checks to make sure it doesn’t break the project, merges it into his local master branch, then pushes the master branch to the official repository on the server. The contribution is now part of the project, and other developers should pull from the official repository to synchronize their local repositories.</p>
+<h2 id='gunrock-39-s-forking-workflow'>Gunrock&#39;s Forking Workflow:</h2>
+<p><strong>gunrock/gunrock:</strong></p>
+
+<ul>
+<li><strong>Master Branch:</strong> Reserved only for final releases or some bug fixes/patched codes.</li>
+<li><strong>Dev Branch:</strong> Current working branch where all developers push their changes to. This dev branch will serve as the &quot;next release&quot; gunrock, eliminating the need of managing individual branches for each feature and merging them when it is time for the release.</li>
+</ul>
+
+<p><strong>personal-fork/gunrock</strong></p>
+
+<ul>
+<li><strong>Feature Branch:</strong> This is the developer&#39;s personal repository with their feature branch. Whatever changes they would like to contribute to gunrock must be in their own personal fork. And once it is time to create a pull request, it is done so using github pull request, a reviewer checks it and the changes are merged into gunrock/gunrock dev branch.</li>
+</ul>
+
+<p>Note that transitioning to this type of workflow from branching model doesn&#39;t require much effort, we will just have to start working on our forks and start creating pull requests to one dev branch.</p>
+<h2 id='how-to-contribute'>How to contribute?</h2>
+<ul>
+<li>Fork using GitHub; https://github.com/gunrock/gunrock</li>
+<li><code>git clone --recursive https://github.com/gunrock/gunrock.git</code></li>
+<li><code>git remote set-url --push origin https://github.com/username/gunrock.git</code> This insures that you are pulling from <code>gunrock/gunrock</code> (staying updated with the main repository) but pushing to your own fork <code>username/gunrock</code>.</li>
+<li><code>git add &lt;filename&gt;</code></li>
+<li><code>git commit -m &quot;Describe your changes.&quot;</code></li>
+<li><code>git push</code></li>
+<li>Once you&#39;ve pushed the changes on your fork, you can create a <strong>pull request</strong> on Github to merge the changes.</li>
+<li>Pull request will then be reviewed and merged into the <code>dev</code> branch.</li>
+</ul>
+<h1 id='road-map'>Road Map</h1>
+<ul>
+<li><p><strong>Framework:</strong> We are exploring more operators such as neighborhood
+reduction and segmented intersection. Generally we want to find the right set of operators that can abstract most graph primitives while delivering high performance.</p></li>
+<li><p><strong>API:</strong> We would like to make an API refactoring to simplify parameter passing and to isolate parts of the library that dependencies are not necessary. The target is to make the frontier concept more clear, and to promote code reuse.</p></li>
+<li><p><strong>Primitives:</strong> Our near-term goal is to graduate several primitives in dev branch including A* search, weighted label propagation, subgraph matching, triangle counting, and clustering coefficients; implement maximal independent set, max flow, and graph coloring algorithms, build better support for bipartite graph algorithms, and explore community detection algorithms. Our long term goals include algorithms on dynamic graphs, multi-level priority queue support, graph partitioning, and more flexible and scalable multi-GPU algorithms.</p></li>
+</ul>
+<h1 id='how-to-write-googletest-for-gunrock'>How to write GoogleTest for Gunrock?</h1>
+<p><strong>Recommended Read:</strong> <a href="https://github.com/google/googletest/blob/master/googletest/docs/Primer.md">Introduction: Why Google C++ Testing Framework?</a></p>
+
+<p>When writing a good test, we would like to cover all possible functions (or execute all code lines),
+what I will recommend to do is write a simple test, run code coverage on it, and
+use codecov.io to determine what lines are not executed. This gives you a good
+idea of what needs to be in the test and what you are missing.</p>
+
+<p><strong>What is code coverage?</strong></p>
+
+<blockquote>
+<p>Code coverage is a measurement used to express which lines of code were executed by a test suite. We use three primary terms to describe each lines executed.</p>
+
+<ul>
+<li>hit indicates that the source code was executed by the test suite.</li>
+<li>partial indicates that the source code was not fully executed by the test suite; there are remaining branches that were not executed.</li>
+<li>miss indicates that the source code was not executed by the test suite.</li>
+</ul>
+
+<p>Coverage is the ratio of hits / (hit + partial + miss). A code base that has 5 lines executed by tests out of 12 total lines will receive a coverage ratio of 41% (rounding down).</p>
+</blockquote>
+
+<p>Below is an example of what lines are a hit and a miss; you can target the lines missed in the tests to improve coverage.</p>
+
+<p><img src="https://i.imgur.com/5QwKjcB.png" alt="Example CodeCov Stats" /></p>
+<h2 id='example-test-using-googletest'>Example Test Using GoogleTest</h2>
+<ol>
+<li><p>Create a <code>test_&lt;test-name&gt;.h</code> file and place it in the appropriate directory inside <code>/path/to/gunrock/tests/</code>. I will be using <code>test_bfs_lib.h</code> as an example.</p></li>
+<li><p>In the <code>tests/test.cpp</code> file, add your test file as an include:</p></li>
+</ol>
+<pre class="highlight c tab-c"><code><span class="c1">// Add google tests
+</span><span class="cp">#include "bfs/test_lib_bfs.h"
+</span></code></pre>
+<ol>
+<li><p>In your <code>test_&lt;test-name&gt;.h</code> file, create a <code>TEST()</code> function, which takes two parameters: <code>TEST(&lt;nameofthesuite&gt;, &lt;nameofthetest&gt;)</code>.</p></li>
+<li><p>Use <code>EXPECT</code> and <code>ASSERT</code> to write the actual test itself. I have provided a commented example below:</p></li>
+</ol>
+<pre class="highlight c tab-c"><code><span class="cm">/**
+ * @brief BFS test for shared library advanced interface
+ * @file test_lib_bfs.h
+ */</span>
+
+<span class="c1">// Includes required for the test
+</span><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;gunrock/gunrock.h&gt;
+#include &lt;gmock/gmock.h&gt;
+#include &lt;gtest/gtest.h&gt;
+</span>
+<span class="c1">// Add to gunrock's namespace
+</span><span class="n">namespace</span> <span class="n">gunrock</span> <span class="p">{</span>
+
+<span class="cm">/* Test function, test suite in this case is
+ * sharedlibrary and the test itself is breadthfirstsearch
+ */</span>
+<span class="n">TEST</span><span class="p">(</span><span class="n">sharedlibrary</span><span class="p">,</span> <span class="n">breadthfirstsearch</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">struct</span> <span class="n">GRTypes</span> <span class="n">data_t</span><span class="p">;</span>                 <span class="c1">// data type structure
+</span>    <span class="n">data_t</span><span class="p">.</span><span class="n">VTXID_TYPE</span> <span class="o">=</span> <span class="n">VTXID_INT</span><span class="p">;</span>         <span class="c1">// vertex identifier
+</span>    <span class="n">data_t</span><span class="p">.</span><span class="n">SIZET_TYPE</span> <span class="o">=</span> <span class="n">SIZET_INT</span><span class="p">;</span>         <span class="c1">// graph size type
+</span>    <span class="n">data_t</span><span class="p">.</span><span class="n">VALUE_TYPE</span> <span class="o">=</span> <span class="n">VALUE_INT</span><span class="p">;</span>         <span class="c1">// attributes type
+</span>    <span class="kt">int</span> <span class="n">srcs</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">};</span>
+
+    <span class="k">struct</span> <span class="n">GRSetup</span> <span class="o">*</span><span class="n">config</span> <span class="o">=</span> <span class="n">InitSetup</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">srcs</span><span class="p">);</span>   <span class="c1">// gunrock configurations
+</span>
+    <span class="kt">int</span> <span class="n">num_nodes</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span> <span class="n">num_edges</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>  <span class="c1">// number of nodes and edges
+</span>    <span class="kt">int</span> <span class="n">row_offsets</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span>  <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">};</span>
+    <span class="kt">int</span> <span class="n">col_indices</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">};</span>
+
+    <span class="k">struct</span> <span class="n">GRGraph</span> <span class="o">*</span><span class="n">grapho</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">GRGraph</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">GRGraph</span><span class="p">));</span>
+    <span class="k">struct</span> <span class="n">GRGraph</span> <span class="o">*</span><span class="n">graphi</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">GRGraph</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">GRGraph</span><span class="p">));</span>
+    <span class="n">graphi</span><span class="o">-&gt;</span><span class="n">num_nodes</span>   <span class="o">=</span> <span class="n">num_nodes</span><span class="p">;</span>
+    <span class="n">graphi</span><span class="o">-&gt;</span><span class="n">num_edges</span>   <span class="o">=</span> <span class="n">num_edges</span><span class="p">;</span>
+    <span class="n">graphi</span><span class="o">-&gt;</span><span class="n">row_offsets</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">row_offsets</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="n">graphi</span><span class="o">-&gt;</span><span class="n">col_indices</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">col_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+
+    <span class="n">gunrock_bfs</span><span class="p">(</span><span class="n">grapho</span><span class="p">,</span> <span class="n">graphi</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">data_t</span><span class="p">);</span>
+
+    <span class="kt">int</span> <span class="o">*</span><span class="n">labels</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="o">*</span> <span class="n">graphi</span><span class="o">-&gt;</span><span class="n">num_nodes</span><span class="p">);</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">grapho</span><span class="o">-&gt;</span><span class="n">node_value1</span><span class="p">;</span>
+
+    <span class="c1">// IMPORTANT: Expected output is stored in an array to compare against determining if the test passed or failed
+</span>    <span class="kt">int</span> <span class="n">result</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2147483647</span><span class="p">,</span> <span class="mi">2147483647</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">};</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">graphi</span><span class="o">-&gt;</span><span class="n">num_nodes</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// IMPORTANT: Compare expected result with the generated labels
+</span>      <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="s">"Vectors x and y differ at index "</span> <span class="o">&lt;&lt;</span> <span class="n">i</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">graphi</span><span class="p">)</span> <span class="n">free</span><span class="p">(</span><span class="n">graphi</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">grapho</span><span class="p">)</span> <span class="n">free</span><span class="p">(</span><span class="n">grapho</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="n">free</span><span class="p">(</span><span class="n">labels</span><span class="p">);</span>
+
+<span class="p">}</span>
+<span class="p">}</span> <span class="c1">// namespace gunrock
+</span></code></pre>
+<ol>
+<li>Now when you run the binary called <code>unit_test</code>, it will automatically run your test suite along with all other google tests as well.
+This binary it automatically compiled when gunrock is built, and is found in <code>/path/to/builddir/bin/unit_test</code>.</li>
+</ol>
+
+<p><strong>Final Remarks:</strong></p>
+
+<ul>
+<li>I highly recommend reading the Primer document mentioned at the start of this tutorial. It explains in detail how to write a unit test using google test. My tutorial has more been about how to incorporate it into Gunrock.</li>
+<li>Another interesting read is <a href="https://testing.googleblog.com/2014/07/measuring-coverage-at-google.html">Measuring Coverage at Google</a>.</li>
+</ul>
+<h1 id='results'>Results</h1>
+<p>The following are some preliminary performance results. It is meant to give a rough idea
+of how Gunrock performs with specific version, testing environment, parameters
+and datasets. The numbers may change (with very high chances in reality),
+throughout the development of the library, and / or with different environments,
+running parameters and datasets. If more accurate numbers (e.g. for comparison
+in a paper), or results with different parameters / datasets, please contact
+the developers of Gunrock.</p>
+<h2 id='general-remarks'>General remarks</h2>
+<ul>
+<li>All timings are shown in Millisecond (ms).</li>
+<li><p>Abreviation:</p>
+
+<ul>
+<li>CSR   = compressed sparse row</li>
+<li>CSC   = compressed sparse column</li>
+<li>D     = directed</li>
+<li>UD    = undirected</li>
+<li>SOC   = social graph</li>
+<li>MTEPS = million traversed edges per second</li>
+<li>MTVPS = million traversed vertices per second</li>
+<li>V     = vertex</li>
+<li>E     = edge</li>
+<li>H     = hardware</li>
+<li>S     = software</li>
+<li>G     = Gunrock</li>
+<li>P     = parameter</li>
+</ul></li>
+<li><p>Load time includes graph generation (for synthetic graphs) or raw data reading
+(for real graphs) + format conversion (to CSR and / or CSC, to UD, when necessary) time</p></li>
+<li><p>Preprocess time includes memory allocation, graph partition (for multiple GPU) and
+initial data transmission (CPU -&gt; GPU) time</p></li>
+<li><p>Process time is the actual algorithm running time on GPU</p></li>
+<li><p>Postprocess time includes resulted data transmission (GPU -&gt; CPU), verification and
+clean-up time</p></li>
+<li><p>The total time of our results are dominated by load / write time (our server
+is not optimized for data load / write performance). The processing time may be a better
+indicator of performance.</p></li>
+</ul>
+<h2 id='breadth-first-search-bfs'>Breadth-First Search (BFS)</h2>
+<table><thead>
+<tr>
+<th>No.</th>
+<th>Dataset</th>
+<th>graph type</th>
+<th>V</th>
+<th>E</th>
+<th>root vertex</th>
+<th>iteration</th>
+<th>process time</th>
+<th>MTEPS</th>
+<th>MTVPS</th>
+<th>load time</th>
+<th>preprocess time</th>
+<th>postprocess time</th>
+<th>write time</th>
+<th>total time</th>
+<th>condition</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>friendster_edges_small_2hop</td>
+<td>SOC, CSR, D</td>
+<td>121,674,532</td>
+<td>20,509</td>
+<td>3,546,566</td>
+<td>6</td>
+<td>17.2760</td>
+<td>1.1871</td>
+<td>0.4893</td>
+<td>12,590.6990</td>
+<td>17,114.5179</td>
+<td></td>
+<td>112.5512</td>
+<td>31,016.4499</td>
+<td>H1 + S1 + G1 + P1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>friendster_edges_gte_1M</td>
+<td>SOC, CSR, D</td>
+<td>124,836,417</td>
+<td>8,361,851</td>
+<td>27,345,193</td>
+<td>10</td>
+<td>30.0791</td>
+<td>227.9951</td>
+<td>101.5078</td>
+<td>12,519.1791</td>
+<td>17,790.8509</td>
+<td></td>
+<td>2,787.5559</td>
+<td>34,283.0300</td>
+<td>H1 + S1 + G1 + P1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>friendster_edges_gte_10M</td>
+<td>SOC, CSR, D</td>
+<td>124,836,417</td>
+<td>1,342,099,766</td>
+<td>71,768,986</td>
+<td>12</td>
+<td>1,442.8939</td>
+<td>930.1573</td>
+<td>68.5219</td>
+<td>12,633.6250</td>
+<td>103,272.5029</td>
+<td></td>
+<td>42,752.1100</td>
+<td>161,598.9239</td>
+<td>H1 + S1 + G1 + P1</td>
+</tr>
+<tr>
+<td>4</td>
+<td>com_friendster</td>
+<td>SOC, CSR, D</td>
+<td>124,836,419</td>
+<td>1,806,067,135</td>
+<td>7,688,909</td>
+<td>31</td>
+<td>1,425.3568</td>
+<td>1267.0983</td>
+<td>108.0366</td>
+<td>16,707.1941</td>
+<td>145,548.2471</td>
+<td></td>
+<td>65,636.1299</td>
+<td>231,047.3258</td>
+<td>H1 + S1 + G1 + P1</td>
+</tr>
+<tr>
+<td>5</td>
+<td>com_LiveJournal</td>
+<td>SOC, CSR, D</td>
+<td>4,036,537</td>
+<td>34,681,189</td>
+<td>9,766</td>
+<td>17</td>
+<td>49.9380</td>
+<td>694.4850</td>
+<td>191.7421</td>
+<td>12,260.1349</td>
+<td>1,461.0670</td>
+<td></td>
+<td>12,260.1349</td>
+<td>18,522.2769</td>
+<td>H1 + S1 + G1 + P1</td>
+</tr>
+</tbody></table>
+<h3 id='parameters'>Parameters</h3>
+<ul>
+<li>P1 = --traversal-mode=0 --device=0,1,2,3 --src=largestdegree --mark-pred --quick --output_filename=some_valid_filename</li>
+</ul>
+<h3 id='remarks'>Remarks</h3>
+<ul>
+<li>Idempotence is disabled when --mark-pred (mark predecessors) is used.</li>
+</ul>
+<h2 id='page-rank-pr'>Page Rank (PR)</h2>
+<table><thead>
+<tr>
+<th>No.</th>
+<th>Dataset</th>
+<th>graph type</th>
+<th>V</th>
+<th>E</th>
+<th>iteration</th>
+<th>process time</th>
+<th>MTEPS</th>
+<th>MTVPS</th>
+<th>load time</th>
+<th>preprocess time</th>
+<th>postprocess time</th>
+<th>write time</th>
+<th>total time</th>
+<th>condition</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>friendster_edges_small_2hop</td>
+<td>SOC, CSR, D</td>
+<td>121,674,532</td>
+<td>20,509</td>
+<td>18</td>
+<td>5,287.1938</td>
+<td>0.0698</td>
+<td>414.2352</td>
+<td>10,758.1401</td>
+<td>241.4210</td>
+<td></td>
+<td>235,052.1171</td>
+<td>251,862.2911</td>
+<td>H2 + S1 + G1 + P1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>friendster_edges_gte_1M</td>
+<td>SOC, CSR, D</td>
+<td>124,836,417</td>
+<td>8,361,851</td>
+<td>41</td>
+<td>13,322.2578</td>
+<td>25.7340</td>
+<td>384.1911</td>
+<td>10,514.4429</td>
+<td>156.9688</td>
+<td></td>
+<td>245,985.4951</td>
+<td>270,482.5490</td>
+<td>H2 + S1 + G1 + P1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>friendster_edges_gte_10M</td>
+<td>SOC, CSR, D</td>
+<td>124,836,417</td>
+<td>1,342,099,766</td>
+<td>78</td>
+<td>173,413.8281</td>
+<td>603.6646</td>
+<td>56.1503</td>
+<td>13,701.0510</td>
+<td>2,358.1159</td>
+<td></td>
+<td>222,023.1612</td>
+<td>412,033.6931</td>
+<td>H2 + S1 + G1 + P1</td>
+</tr>
+<tr>
+<td>4</td>
+<td>com_friendster</td>
+<td>SOC, CSR, D</td>
+<td>124,836,419</td>
+<td>1,806,067,135</td>
+<td>100</td>
+<td>308,233.7812</td>
+<td>585.9407</td>
+<td>40.5005</td>
+<td>14,585.0809</td>
+<td>3,117.2709</td>
+<td></td>
+<td>240,381.1152</td>
+<td>567,139.1692</td>
+<td>H2 + S1 + G1 + P1</td>
+</tr>
+<tr>
+<td>5</td>
+<td>com_LiveJournal</td>
+<td>SOC, CSR, D</td>
+<td>4,036,537</td>
+<td>34,681,189</td>
+<td>23</td>
+<td>2,333.8479</td>
+<td>341.7821</td>
+<td>369.7800</td>
+<td>8,339.2031</td>
+<td>100.7540</td>
+<td></td>
+<td>7,719.7220</td>
+<td>18,512.9559</td>
+<td>H2 + S1 + G1 + P1</td>
+</tr>
+</tbody></table>
+<h3 id='paramters'>Paramters</h3>
+<ul>
+<li>P1 = --traversal-mode=1 --device=2 --quick --delta=0.85 --error=0.001 --max-iter=100 --normalized --queue-sizing=1 --queue-sizing1=0</li>
+</ul>
+<h3 id='remarks-2'>Remarks</h3>
+<ul>
+<li>PR has two formulations, and Gunrock has both implemented. The
+unnormalized one is the one described by the original PR paper;
+it does not converge and can be called by not passing --normalized
+to the Gunrock executable. The normalized one is the one that actually
+converge, and can be called by passing --normalized to the Gunrock
+executable.</li>
+<li>No special treatment is used for 0-out degree vertices, and we use
+a directed graph, so ranks can escape from those vertices. There is a
+way to solve this by distributing the rank of those vertices to all
+vertices. This should make the total rank always equal to 1 (when using
+the normalized formula), but we have not implemented this yet.</li>
+</ul>
+<h2 id='hardware'>Hardware</h2>
+<ul>
+<li>H1 = 4 x NVIDIA Tesla K40c, 2 x Intel Xeon E5-2637 v2, 256 GB DDR3 RAM with ECC</li>
+<li>H2 = 1 x NVIDIA Telsa K40c, 2 x Intel Xeon E5-2637 v2, 256 GB DDR3 RAM with ECC</li>
+</ul>
+<h2 id='software'>Software</h2>
+<ul>
+<li>S1 = ubuntu 14.04.3 LTS (GNU/Linux 3.13.0-62-generic x86_64), NVIDIA GPU driver 352.30, CUDA 7.5, gcc 4.8.4</li>
+</ul>
+<h2 id='gunrock-version'>Gunrock version</h2>
+<p>G1 = dev, bc761f0c78ac855e33587c4be55e2cf672013de5, 2015.12.31</p>
+
+      </div>
+      <div class="dark-box">
+          <div class="lang-selector">
+                <a href="#" data-language-name="shell">shell</a>
+                <a href="#" data-language-name="c">c</a>
+          </div>
+      </div>
+    </div>
+  </body>
+</html>

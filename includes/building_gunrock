@@ -1,0 +1,116 @@
+<h1 id='building-gunrock'>Building Gunrock</h1>
+<p>Gunrock&#39;s current release has been tested on Linux Mint 15 (64-bit), Ubuntu 12.04, 14.04 and 15.10 with CUDA 7.5 installed, compute architecture 3.0 and g++ 4.8. We expect Gunrock to build and run correctly on other 64-bit and 32-bit Linux distributions, Mac OS, and Windows.</p>
+<h2 id='installation'>Installation</h2>
+<p><strong>Overview:</strong></p>
+
+<ul>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#compilation">Compilation</a></li>
+<li><a href="#hardware">Hardware</a></li>
+</ul>
+<h2 id='prerequisites'>Prerequisites</h2>
+<p><strong>Required Dependencies:</strong></p>
+
+<ul>
+<li><p><a href="https://developer.nvidia.com/cuda-zone">CUDA</a> (7.5 or higher) is used to implement Gunrock.</p>
+
+<ul>
+<li>Refer to NVIDIA&#39;s <a href="https://developer.nvidia.com/cuda-downloads">CUDA</a> homepage to download and install CUDA.</li>
+<li>Refer to NVIDIA <a href="http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html">CUDA C Programming Guide</a> for detailed information and examples on programming CUDA.</li>
+</ul></li>
+<li><p><a href="http://www.boost.org/users/history/version_1_58_0.html">Boost</a> (1.58 or higher) is used for for the CPU reference implementations of Connected Component, Betweenness Centrality, PageRank, Single-Source Shortest Path, and Minimum Spanning Tree.</p>
+
+<ul>
+<li>Refer to Boost <a href="http://www.boost.org/doc/libs/1_58_0/more/getting_started/unix-variants.html">Getting Started Guide</a> to install the required Boost libraries.</li>
+<li>Alternatively, you can also install Boost by running <code>/gunrock/dep/install_boost.sh</code> script (recommended installation method).</li>
+<li>Ideal location for Boost installation is <code>/usr/local/</code>. If the build cannot find your Boost library, make sure a symbolic link for boost installation exists somewhere in <code>/usr/</code> directory.</li>
+</ul></li>
+<li><p><a href="https://github.com/moderngpu/moderngpu">ModernGPU</a> and <a href="http://nvlabs.github.io/cub/">CUB</a> used as external submodules for Gunrock&#39;s APIs.</p>
+
+<ul>
+<li>You will need to download or clone ModernGPU and CUB, and place them to <code>gunrock/externals</code>.</li>
+<li>Alternatively, you can clone gunrock recursively with <code>git clone --recursive https://github.com/gunrock/gunrock</code></li>
+</ul></li>
+</ul>
+
+<blockquote>
+<p>or if you already cloned gunrock, under <code>gunrock/</code> directory</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>git submodule init
+git submodule update
+</code></pre>
+<p><strong>Optional Dependencies:</strong></p>
+
+<ul>
+<li><a href="http://glaros.dtc.umn.edu/gkhome/metis/metis/overview">METIS</a> is used as one possible partitioner to partition graphs for multi-gpu primitives implementations.
+
+<ul>
+<li>Refer to METIS <a href="http://glaros.dtc.umn.edu/gkhome/metis/metis/download">Installation Guide</a></li>
+<li>Alternatively, you can also install METIS by running <code>/gunrock/dep/install_metis.sh</code> script.</li>
+<li>If the build cannot find your METIS library, please set the <code>METIS_DLL</code> environment variable to the full path of the library.</li>
+</ul></li>
+</ul>
+<h2 id='compilation'>Compilation</h2>
+<p><strong>Simple Gunrock Compilation:</strong></p>
+
+<blockquote>
+<p>Downloading gunrock</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code><span class="c"># Using git (recursively) download gunrock</span>
+git clone --recursive https://github.com/gunrock/gunrock
+<span class="c"># Using wget to download gunrock</span>
+wget --no-check-certificate https://github.com/gunrock/gunrock/archive/master.zip
+</code></pre>
+<blockquote>
+<p>Compiling gunrock</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code><span class="nb">cd </span>gunrock
+mkdir build <span class="o">&amp;&amp;</span> <span class="nb">cd </span>build
+cmake ..
+make
+</code></pre>
+<ul>
+<li>Binary test files are available in <code>build/bin</code> directory.</li>
+<li>You can either run the test for all primitives by typing <code>make check</code> or <code>ctest</code> in the build directory, or do your own testings manually.</li>
+<li>Detailed test log from <code>ctest</code> can be found in <code>/build/Testing/Temporary/LastTest.log</code>, alternatively you can run tests with verbose option enabled <code>ctest -v</code>.</li>
+</ul>
+
+<p><strong>Advance Gunrock Compilation:</strong></p>
+
+<p>You can also compile gunrock with more specific/advanced settings using <code>cmake -D[OPTION]=ON/OFF</code>. Following options are available:</p>
+
+<ul>
+<li><strong>GUNROCK_BUILD_LIB</strong> (default: ON) - Builds main gunrock library.</li>
+<li><strong>GUNROCK_BUILD_SHARED_LIBS</strong> (default: ON) - Turn off to build for static libraries.</li>
+<li><p><strong>GUNROCK_BUILD_APPLICATIONS</strong> (default: ON) - Set off to only build one of the following primitive (GUNROCK_APP_* must be set on to build if this option is turned off.)</p>
+
+<ul>
+<li><strong>GUNROCK_APP_BC</strong> (default: OFF)</li>
+<li><strong>GUNROCK_APP_BFS</strong> (default: OFF)</li>
+<li><strong>GUNROCK_APP_CC</strong> (default: OFF)</li>
+<li><strong>GUNROCK_APP_PR</strong> (default: OFF)</li>
+<li><strong>GUNROCK_APP_SSSP</strong> (default: OFF)</li>
+<li><strong>GUNROCK_APP_DOBFS</strong> (default: OFF)</li>
+<li><strong>GUNROCK_APP_HITS</strong> (default: OFF)</li>
+<li><strong>GUNROCK_APP_SALSA</strong> (default: OFF)</li>
+<li><strong>GUNROCK_APP_MST</strong> (default: OFF)</li>
+<li><strong>GUNROCK_APP_WTF</strong> (default: OFF)</li>
+<li><strong>GUNROCK_APP_TOPK</strong> (default: OFF)</li>
+</ul></li>
+<li><p><strong>GUNROCK_MGPU_TESTS</strong> (default: OFF) - If on, tests multiple GPU primitives with <code>ctest</code>.</p></li>
+<li><p><strong>GUNROCK_GENCODE_SM&lt;&gt;</strong> (default: GUNROCK_GENCODE_SM30,35,61=ON) change to generate code for a different compute capability.</p></li>
+<li><p><strong>CUDA_VERBOSE_PTXAS</strong> (default: OFF) - ON to enable verbose output from the PTXAS assembler.</p></li>
+</ul>
+
+<blockquote>
+<p>Example for compiling gunrock with only <em>Breadth First Search (BFS)</em> primitive</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>mkdir build <span class="o">&amp;&amp;</span> <span class="nb">cd </span>build
+cmake -DGUNROCK_BUILD_APPLICATIONS<span class="o">=</span>OFF -DGUNROCK_APP_BFS<span class="o">=</span>ON ..
+make
+</code></pre><h2 id='generating-datasets'>Generating Datasets</h2>
+<p>All dataset-related code is under the <code>gunrock/dataset/</code> subdirectory. The current version of Gunrock only supports <a href="http://math.nist.gov/MatrixMarket/formats.html">Matrix-market coordinate-formatted graph</a> format. The datasets are divided into two categories according to their scale. Under the <code>dataset/small/</code> subdirectory, there are trivial graph datasets for testing the correctness of the graph primitives. All of them are ready to use. Under the <code>dataset/large/</code> subdirectory, there are large graph datasets for doing performance regression tests.
+* To download them to your local machine, just type <code>make</code> in the <code>dataset/large/</code> subdirectory.
+* You can also choose to only download one specific dataset to your local machine by stepping into the subdirectory of that dataset and typing make inside that subdirectory.</p>
+<h2 id='hardware'>Hardware</h2>
+<p><strong>Laboratory Tested Hardware:</strong> Gunrock with GeForce GTX 970, Tesla K40s. We have not encountered any trouble in-house with devices with CUDA capability &gt;= 3.0.</p>

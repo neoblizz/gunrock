@@ -1,0 +1,53 @@
+<h1 id='gunrock-v0-4-release-notes-release_notes'>Gunrock v0.4 Release Notes {#release_notes}</h1>
+<p>Release 0.4
+8th November 2016</p>
+
+<p>Gunrock release 0.4 is a feature release that adds</p>
+
+<ul>
+<li>New optimizations to both advance and filter operators</li>
+<li>Multi-iteration support for BFS, SSSP, BC, CC and PR</li>
+<li>Better error handling</li>
+<li>Updates on several interfaces</li>
+<li>Overall performance improvement for both single and multi-GPU execution</li>
+</ul>
+<h1 id='v0-4-changelog'>v0.4 ChangeLog</h1>
+<ul>
+<li>Integrated direction-optimizing BFS with normal BFS. Now for BFS
+there is only one executable, named bfs. The direction-optimizing
+switch is enabled by the command-line option
+<code>--direction-optimized</code>.</li>
+<li>Added three new strategies for advance (triggered by setting
+<code>ADVANCE_MODE</code> accordingly):
+
+<ul>
+<li><code>ALL_EDGES</code>, optimized for advance on all edges with all vertices
+of the graph. With <code>ALL_EDGES</code>, there is no need to use sorted
+search for load balancing, just binary search over the whole row
+offsets array; used in CC.</li>
+<li><code>LB_CULL</code>, fused LB advance with a subsequent CULL filter; used in
+BFS, SSSP and BC.</li>
+<li><code>LB_LIGHT_CULL</code>, fused <code>LB_LIGHT</code> advance with a subsequent CULL
+filter; used in BFS, SSSP and BC.</li>
+</ul></li>
+<li>Added three new strategies of filter (triggered by setting
+<code>FILTER_MODE</code> accordingly):
+
+<ul>
+<li><code>COMPACTED_CULL</code>, optimized on several culling heuristics</li>
+<li><code>SIMPLIFIED</code>, another implementation of the CULL filter, without
+some optimizations</li>
+<li><code>BY_PASS</code>, optimized for a filter with no elements
+to remove from the input frontier; used in CC and PR.</li>
+</ul></li>
+<li>Added multi-iteration support for BFS, SSSP, BC, CC and PR. Users
+can set the number of iterations to run and specify the source node
+for each run (if necessary) via <code>InitSetup()</code> defined in gunrock.h.</li>
+</ul>
+<h1 id='v0-4-known-issues'>v0.4 Known Issues</h1>
+<ul>
+<li>HITS and SALSA do not have CPU reference yet</li>
+<li>HITS, SALSA, and who-to-Follow do not have multi-GPU support yet</li>
+<li>An out-of-memory error (for graphs that approach the memory limit
+of GPUs) will cause result validation to fail</li>
+</ul>

@@ -1,0 +1,106 @@
+<h1 id='how-to-write-googletest-for-gunrock'>How to write GoogleTest for Gunrock?</h1>
+<p><strong>Recommended Read:</strong> <a href="https://github.com/google/googletest/blob/master/googletest/docs/Primer.md">Introduction: Why Google C++ Testing Framework?</a></p>
+
+<p>When writing a good test, we would like to cover all possible functions (or execute all code lines),
+what I will recommend to do is write a simple test, run code coverage on it, and
+use codecov.io to determine what lines are not executed. This gives you a good
+idea of what needs to be in the test and what you are missing.</p>
+
+<p><strong>What is code coverage?</strong></p>
+
+<blockquote>
+<p>Code coverage is a measurement used to express which lines of code were executed by a test suite. We use three primary terms to describe each lines executed.</p>
+
+<ul>
+<li>hit indicates that the source code was executed by the test suite.</li>
+<li>partial indicates that the source code was not fully executed by the test suite; there are remaining branches that were not executed.</li>
+<li>miss indicates that the source code was not executed by the test suite.</li>
+</ul>
+
+<p>Coverage is the ratio of hits / (hit + partial + miss). A code base that has 5 lines executed by tests out of 12 total lines will receive a coverage ratio of 41% (rounding down).</p>
+</blockquote>
+
+<p>Below is an example of what lines are a hit and a miss; you can target the lines missed in the tests to improve coverage.</p>
+
+<p><img src="https://i.imgur.com/5QwKjcB.png" alt="Example CodeCov Stats" /></p>
+<h2 id='example-test-using-googletest'>Example Test Using GoogleTest</h2>
+<ol>
+<li><p>Create a <code>test_&lt;test-name&gt;.h</code> file and place it in the appropriate directory inside <code>/path/to/gunrock/tests/</code>. I will be using <code>test_bfs_lib.h</code> as an example.</p></li>
+<li><p>In the <code>tests/test.cpp</code> file, add your test file as an include:</p></li>
+</ol>
+<pre class="highlight c tab-c"><code><span class="c1">// Add google tests
+</span><span class="cp">#include "bfs/test_lib_bfs.h"
+</span></code></pre>
+<ol>
+<li><p>In your <code>test_&lt;test-name&gt;.h</code> file, create a <code>TEST()</code> function, which takes two parameters: <code>TEST(&lt;nameofthesuite&gt;, &lt;nameofthetest&gt;)</code>.</p></li>
+<li><p>Use <code>EXPECT</code> and <code>ASSERT</code> to write the actual test itself. I have provided a commented example below:</p></li>
+</ol>
+<pre class="highlight c tab-c"><code><span class="cm">/**
+ * @brief BFS test for shared library advanced interface
+ * @file test_lib_bfs.h
+ */</span>
+
+<span class="c1">// Includes required for the test
+</span><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;gunrock/gunrock.h&gt;
+#include &lt;gmock/gmock.h&gt;
+#include &lt;gtest/gtest.h&gt;
+</span>
+<span class="c1">// Add to gunrock's namespace
+</span><span class="n">namespace</span> <span class="n">gunrock</span> <span class="p">{</span>
+
+<span class="cm">/* Test function, test suite in this case is
+ * sharedlibrary and the test itself is breadthfirstsearch
+ */</span>
+<span class="n">TEST</span><span class="p">(</span><span class="n">sharedlibrary</span><span class="p">,</span> <span class="n">breadthfirstsearch</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">struct</span> <span class="n">GRTypes</span> <span class="n">data_t</span><span class="p">;</span>                 <span class="c1">// data type structure
+</span>    <span class="n">data_t</span><span class="p">.</span><span class="n">VTXID_TYPE</span> <span class="o">=</span> <span class="n">VTXID_INT</span><span class="p">;</span>         <span class="c1">// vertex identifier
+</span>    <span class="n">data_t</span><span class="p">.</span><span class="n">SIZET_TYPE</span> <span class="o">=</span> <span class="n">SIZET_INT</span><span class="p">;</span>         <span class="c1">// graph size type
+</span>    <span class="n">data_t</span><span class="p">.</span><span class="n">VALUE_TYPE</span> <span class="o">=</span> <span class="n">VALUE_INT</span><span class="p">;</span>         <span class="c1">// attributes type
+</span>    <span class="kt">int</span> <span class="n">srcs</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">};</span>
+
+    <span class="k">struct</span> <span class="n">GRSetup</span> <span class="o">*</span><span class="n">config</span> <span class="o">=</span> <span class="n">InitSetup</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">srcs</span><span class="p">);</span>   <span class="c1">// gunrock configurations
+</span>
+    <span class="kt">int</span> <span class="n">num_nodes</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span> <span class="n">num_edges</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>  <span class="c1">// number of nodes and edges
+</span>    <span class="kt">int</span> <span class="n">row_offsets</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span>  <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">};</span>
+    <span class="kt">int</span> <span class="n">col_indices</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">};</span>
+
+    <span class="k">struct</span> <span class="n">GRGraph</span> <span class="o">*</span><span class="n">grapho</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">GRGraph</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">GRGraph</span><span class="p">));</span>
+    <span class="k">struct</span> <span class="n">GRGraph</span> <span class="o">*</span><span class="n">graphi</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">GRGraph</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">GRGraph</span><span class="p">));</span>
+    <span class="n">graphi</span><span class="o">-&gt;</span><span class="n">num_nodes</span>   <span class="o">=</span> <span class="n">num_nodes</span><span class="p">;</span>
+    <span class="n">graphi</span><span class="o">-&gt;</span><span class="n">num_edges</span>   <span class="o">=</span> <span class="n">num_edges</span><span class="p">;</span>
+    <span class="n">graphi</span><span class="o">-&gt;</span><span class="n">row_offsets</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">row_offsets</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="n">graphi</span><span class="o">-&gt;</span><span class="n">col_indices</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">col_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+
+    <span class="n">gunrock_bfs</span><span class="p">(</span><span class="n">grapho</span><span class="p">,</span> <span class="n">graphi</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">data_t</span><span class="p">);</span>
+
+    <span class="kt">int</span> <span class="o">*</span><span class="n">labels</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="o">*</span> <span class="n">graphi</span><span class="o">-&gt;</span><span class="n">num_nodes</span><span class="p">);</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">grapho</span><span class="o">-&gt;</span><span class="n">node_value1</span><span class="p">;</span>
+
+    <span class="c1">// IMPORTANT: Expected output is stored in an array to compare against determining if the test passed or failed
+</span>    <span class="kt">int</span> <span class="n">result</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2147483647</span><span class="p">,</span> <span class="mi">2147483647</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">};</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">graphi</span><span class="o">-&gt;</span><span class="n">num_nodes</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// IMPORTANT: Compare expected result with the generated labels
+</span>      <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="s">"Vectors x and y differ at index "</span> <span class="o">&lt;&lt;</span> <span class="n">i</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">graphi</span><span class="p">)</span> <span class="n">free</span><span class="p">(</span><span class="n">graphi</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">grapho</span><span class="p">)</span> <span class="n">free</span><span class="p">(</span><span class="n">grapho</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="n">free</span><span class="p">(</span><span class="n">labels</span><span class="p">);</span>
+
+<span class="p">}</span>
+<span class="p">}</span> <span class="c1">// namespace gunrock
+</span></code></pre>
+<ol>
+<li>Now when you run the binary called <code>unit_test</code>, it will automatically run your test suite along with all other google tests as well.
+This binary it automatically compiled when gunrock is built, and is found in <code>/path/to/builddir/bin/unit_test</code>.</li>
+</ol>
+
+<p><strong>Final Remarks:</strong></p>
+
+<ul>
+<li>I highly recommend reading the Primer document mentioned at the start of this tutorial. It explains in detail how to write a unit test using google test. My tutorial has more been about how to incorporate it into Gunrock.</li>
+<li>Another interesting read is <a href="https://testing.googleblog.com/2014/07/measuring-coverage-at-google.html">Measuring Coverage at Google</a>.</li>
+</ul>

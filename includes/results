@@ -1,0 +1,294 @@
+<h1 id='results'>Results</h1>
+<p>The following are some preliminary performance results. It is meant to give a rough idea
+of how Gunrock performs with specific version, testing environment, parameters
+and datasets. The numbers may change (with very high chances in reality),
+throughout the development of the library, and / or with different environments,
+running parameters and datasets. If more accurate numbers (e.g. for comparison
+in a paper), or results with different parameters / datasets, please contact
+the developers of Gunrock.</p>
+<h2 id='general-remarks'>General remarks</h2>
+<ul>
+<li>All timings are shown in Millisecond (ms).</li>
+<li><p>Abreviation:</p>
+
+<ul>
+<li>CSR   = compressed sparse row</li>
+<li>CSC   = compressed sparse column</li>
+<li>D     = directed</li>
+<li>UD    = undirected</li>
+<li>SOC   = social graph</li>
+<li>MTEPS = million traversed edges per second</li>
+<li>MTVPS = million traversed vertices per second</li>
+<li>V     = vertex</li>
+<li>E     = edge</li>
+<li>H     = hardware</li>
+<li>S     = software</li>
+<li>G     = Gunrock</li>
+<li>P     = parameter</li>
+</ul></li>
+<li><p>Load time includes graph generation (for synthetic graphs) or raw data reading
+(for real graphs) + format conversion (to CSR and / or CSC, to UD, when necessary) time</p></li>
+<li><p>Preprocess time includes memory allocation, graph partition (for multiple GPU) and
+initial data transmission (CPU -&gt; GPU) time</p></li>
+<li><p>Process time is the actual algorithm running time on GPU</p></li>
+<li><p>Postprocess time includes resulted data transmission (GPU -&gt; CPU), verification and
+clean-up time</p></li>
+<li><p>The total time of our results are dominated by load / write time (our server
+is not optimized for data load / write performance). The processing time may be a better
+indicator of performance.</p></li>
+</ul>
+<h2 id='breadth-first-search-bfs'>Breadth-First Search (BFS)</h2>
+<table><thead>
+<tr>
+<th>No.</th>
+<th>Dataset</th>
+<th>graph type</th>
+<th>V</th>
+<th>E</th>
+<th>root vertex</th>
+<th>iteration</th>
+<th>process time</th>
+<th>MTEPS</th>
+<th>MTVPS</th>
+<th>load time</th>
+<th>preprocess time</th>
+<th>postprocess time</th>
+<th>write time</th>
+<th>total time</th>
+<th>condition</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>friendster_edges_small_2hop</td>
+<td>SOC, CSR, D</td>
+<td>121,674,532</td>
+<td>20,509</td>
+<td>3,546,566</td>
+<td>6</td>
+<td>17.2760</td>
+<td>1.1871</td>
+<td>0.4893</td>
+<td>12,590.6990</td>
+<td>17,114.5179</td>
+<td></td>
+<td>112.5512</td>
+<td>31,016.4499</td>
+<td>H1 + S1 + G1 + P1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>friendster_edges_gte_1M</td>
+<td>SOC, CSR, D</td>
+<td>124,836,417</td>
+<td>8,361,851</td>
+<td>27,345,193</td>
+<td>10</td>
+<td>30.0791</td>
+<td>227.9951</td>
+<td>101.5078</td>
+<td>12,519.1791</td>
+<td>17,790.8509</td>
+<td></td>
+<td>2,787.5559</td>
+<td>34,283.0300</td>
+<td>H1 + S1 + G1 + P1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>friendster_edges_gte_10M</td>
+<td>SOC, CSR, D</td>
+<td>124,836,417</td>
+<td>1,342,099,766</td>
+<td>71,768,986</td>
+<td>12</td>
+<td>1,442.8939</td>
+<td>930.1573</td>
+<td>68.5219</td>
+<td>12,633.6250</td>
+<td>103,272.5029</td>
+<td></td>
+<td>42,752.1100</td>
+<td>161,598.9239</td>
+<td>H1 + S1 + G1 + P1</td>
+</tr>
+<tr>
+<td>4</td>
+<td>com_friendster</td>
+<td>SOC, CSR, D</td>
+<td>124,836,419</td>
+<td>1,806,067,135</td>
+<td>7,688,909</td>
+<td>31</td>
+<td>1,425.3568</td>
+<td>1267.0983</td>
+<td>108.0366</td>
+<td>16,707.1941</td>
+<td>145,548.2471</td>
+<td></td>
+<td>65,636.1299</td>
+<td>231,047.3258</td>
+<td>H1 + S1 + G1 + P1</td>
+</tr>
+<tr>
+<td>5</td>
+<td>com_LiveJournal</td>
+<td>SOC, CSR, D</td>
+<td>4,036,537</td>
+<td>34,681,189</td>
+<td>9,766</td>
+<td>17</td>
+<td>49.9380</td>
+<td>694.4850</td>
+<td>191.7421</td>
+<td>12,260.1349</td>
+<td>1,461.0670</td>
+<td></td>
+<td>12,260.1349</td>
+<td>18,522.2769</td>
+<td>H1 + S1 + G1 + P1</td>
+</tr>
+</tbody></table>
+<h3 id='parameters'>Parameters</h3>
+<ul>
+<li>P1 = --traversal-mode=0 --device=0,1,2,3 --src=largestdegree --mark-pred --quick --output_filename=some_valid_filename</li>
+</ul>
+<h3 id='remarks'>Remarks</h3>
+<ul>
+<li>Idempotence is disabled when --mark-pred (mark predecessors) is used.</li>
+</ul>
+<h2 id='page-rank-pr'>Page Rank (PR)</h2>
+<table><thead>
+<tr>
+<th>No.</th>
+<th>Dataset</th>
+<th>graph type</th>
+<th>V</th>
+<th>E</th>
+<th>iteration</th>
+<th>process time</th>
+<th>MTEPS</th>
+<th>MTVPS</th>
+<th>load time</th>
+<th>preprocess time</th>
+<th>postprocess time</th>
+<th>write time</th>
+<th>total time</th>
+<th>condition</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>friendster_edges_small_2hop</td>
+<td>SOC, CSR, D</td>
+<td>121,674,532</td>
+<td>20,509</td>
+<td>18</td>
+<td>5,287.1938</td>
+<td>0.0698</td>
+<td>414.2352</td>
+<td>10,758.1401</td>
+<td>241.4210</td>
+<td></td>
+<td>235,052.1171</td>
+<td>251,862.2911</td>
+<td>H2 + S1 + G1 + P1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>friendster_edges_gte_1M</td>
+<td>SOC, CSR, D</td>
+<td>124,836,417</td>
+<td>8,361,851</td>
+<td>41</td>
+<td>13,322.2578</td>
+<td>25.7340</td>
+<td>384.1911</td>
+<td>10,514.4429</td>
+<td>156.9688</td>
+<td></td>
+<td>245,985.4951</td>
+<td>270,482.5490</td>
+<td>H2 + S1 + G1 + P1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>friendster_edges_gte_10M</td>
+<td>SOC, CSR, D</td>
+<td>124,836,417</td>
+<td>1,342,099,766</td>
+<td>78</td>
+<td>173,413.8281</td>
+<td>603.6646</td>
+<td>56.1503</td>
+<td>13,701.0510</td>
+<td>2,358.1159</td>
+<td></td>
+<td>222,023.1612</td>
+<td>412,033.6931</td>
+<td>H2 + S1 + G1 + P1</td>
+</tr>
+<tr>
+<td>4</td>
+<td>com_friendster</td>
+<td>SOC, CSR, D</td>
+<td>124,836,419</td>
+<td>1,806,067,135</td>
+<td>100</td>
+<td>308,233.7812</td>
+<td>585.9407</td>
+<td>40.5005</td>
+<td>14,585.0809</td>
+<td>3,117.2709</td>
+<td></td>
+<td>240,381.1152</td>
+<td>567,139.1692</td>
+<td>H2 + S1 + G1 + P1</td>
+</tr>
+<tr>
+<td>5</td>
+<td>com_LiveJournal</td>
+<td>SOC, CSR, D</td>
+<td>4,036,537</td>
+<td>34,681,189</td>
+<td>23</td>
+<td>2,333.8479</td>
+<td>341.7821</td>
+<td>369.7800</td>
+<td>8,339.2031</td>
+<td>100.7540</td>
+<td></td>
+<td>7,719.7220</td>
+<td>18,512.9559</td>
+<td>H2 + S1 + G1 + P1</td>
+</tr>
+</tbody></table>
+<h3 id='paramters'>Paramters</h3>
+<ul>
+<li>P1 = --traversal-mode=1 --device=2 --quick --delta=0.85 --error=0.001 --max-iter=100 --normalized --queue-sizing=1 --queue-sizing1=0</li>
+</ul>
+<h3 id='remarks-2'>Remarks</h3>
+<ul>
+<li>PR has two formulations, and Gunrock has both implemented. The
+unnormalized one is the one described by the original PR paper;
+it does not converge and can be called by not passing --normalized
+to the Gunrock executable. The normalized one is the one that actually
+converge, and can be called by passing --normalized to the Gunrock
+executable.</li>
+<li>No special treatment is used for 0-out degree vertices, and we use
+a directed graph, so ranks can escape from those vertices. There is a
+way to solve this by distributing the rank of those vertices to all
+vertices. This should make the total rank always equal to 1 (when using
+the normalized formula), but we have not implemented this yet.</li>
+</ul>
+<h2 id='hardware'>Hardware</h2>
+<ul>
+<li>H1 = 4 x NVIDIA Tesla K40c, 2 x Intel Xeon E5-2637 v2, 256 GB DDR3 RAM with ECC</li>
+<li>H2 = 1 x NVIDIA Telsa K40c, 2 x Intel Xeon E5-2637 v2, 256 GB DDR3 RAM with ECC</li>
+</ul>
+<h2 id='software'>Software</h2>
+<ul>
+<li>S1 = ubuntu 14.04.3 LTS (GNU/Linux 3.13.0-62-generic x86_64), NVIDIA GPU driver 352.30, CUDA 7.5, gcc 4.8.4</li>
+</ul>
+<h2 id='gunrock-version'>Gunrock version</h2>
+<p>G1 = dev, bc761f0c78ac855e33587c4be55e2cf672013de5, 2015.12.31</p>
