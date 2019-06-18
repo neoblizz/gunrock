@@ -82,7 +82,7 @@ struct TCIterationLoop : public IterationLoopBase
         auto intersect_op = [tc_counts] __host__ __device__(
             VertexT &comm_node, VertexT &edge) -> bool
         {
-            atomicAdd(tc_counts + edge,  1);
+            atomicAdd(tc_counts + comm_node,  1);
             
             return true;
         };
@@ -91,6 +91,7 @@ struct TCIterationLoop : public IterationLoopBase
         GUARD_CU(oprtr::Intersect<oprtr::OprtrType_V2V>(
             graph.csr(), frontier.V_Q(), frontier.Next_V_Q(), 
             oprtr_parameters, intersect_op));
+        //tc_counts = tc_counts/3
 
         return retval;
     }
@@ -298,7 +299,7 @@ public:
                    if (peer_ == 0) {
                         auto &graph = this->problem->sub_graphs[gpu];
                         util::Array1D<SizeT, VertexT> tmp_srcs;
-                        tmp_srcs.Allocate(num_srcs, target | util::HOST);
+                        GUARD_CU(tmp_srcs.Allocate(num_srcs, target | util::HOST));
                         int pos = 0;
                         for(SizeT i = 0; i < graph.nodes; ++i) {
                             for (SizeT j = graph.CsrT::row_offsets[i]; j < graph.CsrT::row_offsets[i+1]; ++j) {
@@ -312,6 +313,7 @@ public:
                            []__host__ __device__ (VertexT &v, VertexT &src) {
                            v = src;
                        }, num_srcs, target, 0));
+                       GUARD_CU(tmp_srcs.Release(target | util::HOST));
                    }
                }
            } else {
