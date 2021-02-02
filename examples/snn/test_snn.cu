@@ -168,7 +168,7 @@ struct main_struct {
 
         faiss::gpu::StandardGpuResources gpu_res;
         gpu_res.noTempMemory();
-        gpu_res.setCudaMallocWarning(true);
+//        gpu_res.setCudaMallocWarning(true);
         gpu_res.setDefaultStream(device, stream);
         cpu_timer.Start();
         faiss::gpu::bruteForceKnn(&gpu_res, faiss::METRIC_L2, samples, true, num_points,

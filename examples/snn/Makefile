@@ -19,7 +19,7 @@ FAISS_LINK =
 ifdef FAISS_INCLUDE_DIR
     ifdef FAISS_LIBRARY
         FAISS_INC = -I$(FAISS_INCLUDE_DIR)
-        FAISS_LINK = -L$(FAISS_LIBRARY) -lfaiss -DFAISS_FOUND=1
+        FAISS_LINK = -L$(FAISS_LIBRARY) -lfaiss -DFAISS_FOUND=1 -lcublas
     else
         $(info FAISS not found. In order to use FAISS, please define FAISS_LIBRARY)
     endif
