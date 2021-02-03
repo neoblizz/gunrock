@@ -347,6 +347,26 @@ double pagerank(
     int*       node_ids,
     float*     ranks);
 
+/**
+ * @brief SNN simple public interface.
+ *
+ * @param[out] node_ids Return top-ranked vertex IDs.
+ * @param[out] pagerank Return top-ranked PageRank scores.
+ * @param[in] num_nodes Input graph number of nodes.
+ * @param[in] num_edges Input graph number of edges.
+ * @param[in] row_offsets Input graph row_offsets.
+ * @param[in] col_indices Input graph col_indices.
+ * @param[in] normalized Whether to perform a normalized PageRank
+ */
+double snn(
+    const char* labels,      // Input file of labels
+    const int   k,           // Input k (kNN parameter)
+    const int   eps,         // Input eps (epsilon)
+    const int   min_pts,     // Input min-pts (minimum points)
+    int*        clusters,
+    int*         clusters_counter,
+    int*         core_points_counter,
+    int*         noise_points_counter);    
 
 /*
  * @brief Louvain simple public interface.

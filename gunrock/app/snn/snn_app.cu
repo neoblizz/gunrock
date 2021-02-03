@@ -22,6 +22,7 @@
 
 // Graphio include
 #include <gunrock/graphio/graphio.cuh>
+#include <gunrock/graphio/labels.cuh>
 
 // App and test base includes
 #include <gunrock/app/app_base.cuh>
@@ -57,7 +58,7 @@ cudaError_t UseParameters(util::Parameters &parameters) {
   GUARD_CU(parameters.Use<std::string>(
       "knn-version",
       util::REQUIRED_ARGUMENT | util::MULTI_VALUE | util::OPTIONAL_PARAMETER,
-      "gunrock", "Version of knn: \"gunrock\" or \"kmcuda\" or \"cuml\" or \"faiss\"", __FILE__, __LINE__));
+      "faiss", "Version of knn: \"gunrock\" or \"kmcuda\" or \"cuml\" or \"faiss\"", __FILE__, __LINE__));
 
   GUARD_CU(parameters.Use<std::string>(
       "snn-tag", util::REQUIRED_ARGUMENT | util::OPTIONAL_PARAMETER, "",
@@ -250,6 +251,63 @@ cudaError_t RunTests(
 }  // namespace knn
 }  // namespace app
 }  // namespace gunrock
+
+template <typename ValueT = double, typename SizeT = int, typename VertexT = int>
+double snn(const char* labels, const SizeT k, 
+            const SizeT eps, const SizeT min_pts, SizeT *clusters, 
+            SizeT *clusters_counter, SizeT *core_points_counter, 
+            SizeT *noise_points_counter, SizeT knn_version){
+    typedef typename gunrock::app::TestGraph<
+        VertexT, SizeT, ValueT, gunrock::graph::HAS_CSR> GraphT;
+    GraphT graph;
+   
+    // Setup parameters
+    gunrock::util::Parameters parameters("snn");
+    gunrock::graphio::UseParameters(parameters);
+    gunrock::app::snn::UseParameters(parameters);
+    gunrock::app::UseParameters_test(parameters);
+    parameters.Parse_CommandLine(0, NULL);
+    parameters.Set("labels-file", labels);
+    parameters.Set("k", k);
+    parameters.Set("eps", eps);
+    parameters.Set("min-pts", min_pts);
+
+    // Creating points array from labels
+    gunrock::util::Array1D<SizeT, ValueT> points;
+    cudaError_t retval = cudaSuccess;
+    retval = gunrock::graphio::labels::Read(parameters, points);
+    if (retval){
+        gunrock::util::PrintMsg("Reading error\n");
+        return retval;
+    }
+    
+    // Check the input labels
+    SizeT num_points = parameters.Get<SizeT>("n");
+    SizeT dim = parameters.Get<SizeT>("dim");
+
+    if (k >= num_points)
+        return gunrock::util::GRError("k must be smaller than the number of labels", __FILE__, __LINE__);
+
+}
+
+/*
+ * @brief SNN interface 
+ * @param[in]   labels_file          The filepath of labels
+ * @param[in]   k                    The kNN parameter
+ * @param[in]   eps                  Parameter of density
+ * @param[in]   min_pts              Parameter of core point
+ * @param[out]  clusters             Return cluster assignments
+ * @param[out]  clusters_counter     Return the number of clusters
+ * @param[out]  core_points_counter  Return the number of core points
+ * @param[out]  noise_points_counter Return the number of noise points
+ * \return      double               Return accumulated elapsed times for all runs
+ */
+double snn(const char* labels_file, const int k, const int eps, 
+            const int min_pts, int *clusters, int *clusters_counter, 
+            int *core_points_counter, int *noise_points_counter){
+    return snn(labels_file, k, eps, min_pts, clusters, clusters_counter, 
+                core_points_counter, noise_points_counter, 1); 
+}
 
 // Leave this at the end of the file
 // Local Variables:
