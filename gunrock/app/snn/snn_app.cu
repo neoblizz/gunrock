@@ -35,6 +35,18 @@
 #include <gunrock/app/snn/snn_enactor.cuh>
 #include <gunrock/app/snn/snn_test.cuh>
 
+// FAISS knn
+#ifdef FAISS_FOUND
+    #include <faiss/gpu/GpuDistance.h>
+    #include <faiss/gpu/GpuIndexFlat.h>
+    #include <faiss/gpu/GpuResources.h>
+    #include <faiss/gpu/StandardGpuResources.h>
+    #include <faiss/utils/Heap.h>
+    #include <faiss/gpu/utils/Limits.cuh>
+    #include <faiss/gpu/utils/Select.cuh>
+#endif
+
+
 namespace gunrock {
 namespace app {
 namespace snn {
@@ -255,12 +267,12 @@ cudaError_t RunTests(
 template <typename ValueT = double, typename SizeT = int, typename VertexT = int>
 double snn(const char* labels, const SizeT k, 
             const SizeT eps, const SizeT min_pts, SizeT *clusters, 
-            SizeT *clusters_counter, SizeT *core_points_counter, 
-            SizeT *noise_points_counter, SizeT knn_version){
+            SizeT &clusters_counter, SizeT &core_points_counter, 
+            SizeT &noise_points_counter, SizeT knn_version){
     typedef typename gunrock::app::TestGraph<
         VertexT, SizeT, ValueT, gunrock::graph::HAS_CSR> GraphT;
     GraphT graph;
-   
+
     // Setup parameters
     gunrock::util::Parameters parameters("snn");
     gunrock::graphio::UseParameters(parameters);
@@ -271,6 +283,8 @@ double snn(const char* labels, const SizeT k,
     parameters.Set("k", k);
     parameters.Set("eps", eps);
     parameters.Set("min-pts", min_pts);
+
+    bool quiet = parameters.Get<bool>("quiet");
 
     // Creating points array from labels
     gunrock::util::Array1D<SizeT, ValueT> points;
@@ -287,6 +301,77 @@ double snn(const char* labels, const SizeT k,
 
     if (k >= num_points)
         return gunrock::util::GRError("k must be smaller than the number of labels", __FILE__, __LINE__);
+
+    SizeT* h_knns = (SizeT*) malloc(sizeof(SizeT)*num_points*k);
+
+    if (knn_version == 0){//GUNROCK
+    }else if (knn_version == 1){//FAISS
+
+        gunrock::util::PrintMsg("KNN version: " + knn_version);
+
+#ifdef FAISS_FOUND
+        //* -------------------- FAISS KNN ------------------------*
+        long* res_I;
+        GUARD_CU(cudaMalloc((void**)&res_I, sizeof(long)*num_points*(k+1)));
+        float* res_D;
+        GUARD_CU(cudaMalloc((void**)&res_D, sizeof(float)*num_points*(k+1)));
+
+        ValueT *samples0 = (ValueT*)points.GetPointer(gunrock::util::HOST);
+        float *samples = (float*)malloc(num_points * dim * sizeof(float));
+
+        for (int i = 0; i < num_points * dim; ++i) 
+            samples[i] = (float)samples0[i];
+        
+        std::vector<float*> ptrs(1);
+        ptrs[0] = samples;
+        std::vector<int> sizes(1);
+        sizes[0] = num_points;
+
+        SizeT device = parameters.Get<SizeT>("device");
+        GUARD_CU(cudaSetDevice(device));
+        cudaStream_t stream;
+        GUARD_CU(cudaStreamCreate(&stream));
+
+        faiss::gpu::StandardGpuResources gpu_res;
+        gpu_res.noTempMemory();
+        gpu_res.setDefaultStream(device, stream);
+        gunrock::util::CpuTimer cpu_timer;
+        cpu_timer.Start();
+        faiss::gpu::bruteForceKnn(&gpu_res, faiss::METRIC_L2, samples, true, num_points,
+                samples, true, num_points, dim, k+1, res_D, res_I);
+        cpu_timer.Stop();
+    
+        gunrock::util::PrintMsg("Faiss KNN Elapsed: " 
+                  + std::to_string(cpu_timer.ElapsedMillis()), !quiet);
+        gunrock::util::PrintMsg("__________________________", !quiet);
+        parameters.Set("knn-elapsed", cpu_timer.ElapsedMillis());
+    
+        long* knn_res = (long*)malloc(sizeof(long)*num_points*(k+1));
+        GUARD_CU(cudaMemcpy(knn_res, res_I, sizeof(long)*num_points*(k+1), cudaMemcpyDeviceToHost));
+        cudaDeviceSynchronize();
+
+        for (SizeT x = 0; x < num_points; ++x){
+            if (knn_res[x * (k+1)] != x){
+                h_knns[x*k] = knn_res[x * (k+1)];
+            }
+            for (int i=0; i<k; ++i){
+                if (knn_res[x * (k+1) + i + 1] == x)
+                    continue;
+                h_knns[x*k + i] = knn_res[x * (k+1) + i + 1];
+            }
+        }
+        
+        delete [] samples;
+        delete [] knn_res;
+        cudaFree(res_I);
+        cudaFree(res_D);
+#else 
+        // FAISS_FOUND
+        gunrock::util::PrintMsg("FAISS library not found.");
+        delete [] h_knns;
+#endif 
+
+    }
 
 }
 
@@ -305,8 +390,8 @@ double snn(const char* labels, const SizeT k,
 double snn(const char* labels_file, const int k, const int eps, 
             const int min_pts, int *clusters, int *clusters_counter, 
             int *core_points_counter, int *noise_points_counter){
-    return snn(labels_file, k, eps, min_pts, clusters, clusters_counter, 
-                core_points_counter, noise_points_counter, 1); 
+    return snn(labels_file, k, eps, min_pts, clusters, *clusters_counter, 
+                *core_points_counter, *noise_points_counter, 1); 
 }
 
 // Leave this at the end of the file
