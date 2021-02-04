@@ -8,33 +8,8 @@
 
 int main(int argc, char *argv[]) {
   ////////////////////////////////////////////////////////////////////////////
-/*
-  int num_labels = 10, dim = 3;
 
-  int labels[10*3] = {7, 3, 1,
-                      19, 3, 1,
-                      6, 2, 1,
-                      7, 2, 1,
-                      8, 2, 1,
-                      18, 2, 1,
-                      19, 2, 1,
-                      20, 2, 1,
-                      7, 1, 1,
-                      19, 1, 1};
-  
-  */
-
-  int num_nodes = 7, num_edges = 26;
-  int row_offsets[8] = {0, 3, 6, 11, 15, 19, 23, 26};
-  int col_indices[26] = {1, 2, 3, 0, 2, 4, 0, 1, 3, 4, 5, 0, 2,
-                         5, 6, 1, 2, 5, 6, 2, 3, 4, 6, 3, 4, 5};
-
-  int *node_ids = (int *)malloc(sizeof(int) * num_nodes);
-  float *ranks = (float *)malloc(sizeof(float) * num_nodes);
-  //double elapsed2 = pagerank(num_nodes, num_edges, row_offsets, col_indices, 1,
-  //                          node_ids, ranks);
-  
-  int k = 30;
+  int k = 4;
   int eps = 5;
   int min_pts = 5;
 
@@ -43,7 +18,7 @@ int main(int argc, char *argv[]) {
 
   FILE *f_in = fopen(labels, "r");
   if (!f_in) {
-      printf("file does not exist\n");
+      printf("file does not exist %s\n", labels);
       return 0;
   }
 
