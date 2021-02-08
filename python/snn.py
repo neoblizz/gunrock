@@ -1,5 +1,6 @@
 ### sample python interface - pagerank
 
+import sys, getopt
 from ctypes import *
 
 ### load gunrock shared library - libgunrock
@@ -38,3 +39,36 @@ elapsed = gunrock.snn(labels, k, epsilon, min_pts, clusters, clusters_counter, c
 
 ### sample results
 print ('elapsed: ' + str(elapsed))
+
+def read_input(argv):
+    labels_file = ''
+    k = 0
+    epsilon = 0
+    min_pts = 0
+    try:
+        opts, args = getopt.getopt(argv, 'm:l:k:e:m', ['market=', 'labels=', 'k=', 'eps=', 'min-pts='])
+    except getopt.GetoptError:
+        print(argv)
+        print("error")
+        sys.exit(2)
+    
+    for opt, arg in opts:
+        if opt == "--labels":
+            print("labels file:", arg)
+            labels_file = arg
+        elif opt == "--k":
+            print("k: ", arg)
+            k = arg
+        elif opt == "--eps":
+            print("eps: ", arg)
+            eps = arg
+        elif opt == "--min-pts":
+            print("min-pts: ", arg)
+            min_pts = arg
+
+def main(argv):
+    read_input(argv)
+    
+
+if __name__ == "__main__":
+    main(sys.argv[1:])
