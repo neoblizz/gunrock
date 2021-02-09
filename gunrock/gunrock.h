@@ -360,13 +360,13 @@ double pagerank(
  */
 double snn(
     const char* labels,      // Input file of labels
-    const int   k,           // Input k (kNN parameter)
-    const int   eps,         // Input eps (epsilon)
-    const int   min_pts,     // Input min-pts (minimum points)
+    const int*  k,           // Input k (kNN parameter)
+    const int*  eps,         // Input eps (epsilon)
+    const int*  min_pts,     // Input min-pts (minimum points)
     int*        clusters,
-    int*         clusters_counter,
-    int*         core_points_counter,
-    int*         noise_points_counter);    
+    int*        clusters_counter,
+    int*        core_points_counter,
+    int*        noise_points_counter);    
 
 /*
  * @brief Louvain simple public interface.

@@ -158,6 +158,8 @@ cudaError_t RunTests(
     util::Location target) {
   cudaError_t retval = cudaSuccess;
 
+  printf("RunTest(%d, %d, %d, %d)\n", num_points, k, eps, min_pts);
+
   //typedef typename GraphT::VertexT VertexT;
   typedef typename GraphT::ValueT ValueT;
   typedef Problem<GraphT> ProblemT;
@@ -260,54 +262,17 @@ cudaError_t RunTests(
   return retval;
 }
 
-}  // namespace knn
-}  // namespace app
-}  // namespace gunrock
-
-template <typename ValueT = double, typename SizeT = int, typename VertexT = int>
-double snn(const char* labels, const SizeT k, 
-            const SizeT eps, const SizeT min_pts, SizeT *clusters, 
-            SizeT &clusters_counter, SizeT &core_points_counter, 
-            SizeT &noise_points_counter, SizeT knn_version){
-    typedef typename gunrock::app::TestGraph<
-        VertexT, SizeT, ValueT, gunrock::graph::HAS_CSR> GraphT;
-    GraphT graph;
-
-    // Setup parameters
-    gunrock::util::Parameters parameters("snn");
-    gunrock::graphio::UseParameters(parameters);
-    gunrock::app::snn::UseParameters(parameters);
-    gunrock::app::UseParameters_test(parameters);
-    parameters.Parse_CommandLine(0, NULL);
-    parameters.Set("labels-file", labels);
-    parameters.Set("k", k);
-    parameters.Set("eps", eps);
-    parameters.Set("min-pts", min_pts);
-
-    bool quiet = parameters.Get<bool>("quiet");
-
-    // Creating points array from labels
-    gunrock::util::Array1D<SizeT, ValueT> points;
-    cudaError_t retval = cudaSuccess;
-    retval = gunrock::graphio::labels::Read(parameters, points);
-    if (retval){
-        gunrock::util::PrintMsg("Reading error\n");
-        return retval;
-    }
+template <typename ArrayT, typename SizeT = int, typename ValueT = double>
+cudaError_t RunKNN(util::Parameters& parameters, const SizeT knn_version,
+    const SizeT num_points, const SizeT dim, const SizeT k, 
+    const ArrayT& points, SizeT* h_knns){ 
     
-    // Check the input labels
-    SizeT num_points = parameters.Get<SizeT>("n");
-    SizeT dim = parameters.Get<SizeT>("dim");
-
-    if (k >= num_points)
-        return gunrock::util::GRError("k must be smaller than the number of labels", __FILE__, __LINE__);
-
-    SizeT* h_knns = (SizeT*) malloc(sizeof(SizeT)*num_points*k);
+    gunrock::util::PrintMsg("KNN version: " + knn_version);
+    bool quiet = parameters.Get<bool>("quiet");
+    cudaError_t retval = cudaSuccess;
 
     if (knn_version == 0){//GUNROCK
     }else if (knn_version == 1){//FAISS
-
-        gunrock::util::PrintMsg("KNN version: " + knn_version);
 
 #ifdef FAISS_FOUND
         //* -------------------- FAISS KNN ------------------------*
@@ -348,7 +313,7 @@ double snn(const char* labels, const SizeT k,
     
         long* knn_res = (long*)malloc(sizeof(long)*num_points*(k+1));
         GUARD_CU(cudaMemcpy(knn_res, res_I, sizeof(long)*num_points*(k+1), cudaMemcpyDeviceToHost));
-        cudaDeviceSynchronize();
+        GUARD_CU(cudaDeviceSynchronize());
 
         for (SizeT x = 0; x < num_points; ++x){
             if (knn_res[x * (k+1)] != x){
@@ -360,7 +325,6 @@ double snn(const char* labels, const SizeT k,
                 h_knns[x*k + i] = knn_res[x * (k+1) + i + 1];
             }
         }
-        
         delete [] samples;
         delete [] knn_res;
         cudaFree(res_I);
@@ -368,11 +332,83 @@ double snn(const char* labels, const SizeT k,
 #else 
         // FAISS_FOUND
         gunrock::util::PrintMsg("FAISS library not found.");
+        printf("FAISS library not found.");
         delete [] h_knns;
 #endif 
 
-    }
+    } // if FAISS
+    return retval;
+} // RunKNN
 
+}  // namespace snn
+}  // namespace app
+}  // namespace gunrock
+
+
+template <typename ValueT = double, typename SizeT = int, typename VertexT = int>
+double snn(const char* labels, const SizeT k, 
+            const SizeT eps, const SizeT min_pts, SizeT *h_cluster, 
+            SizeT *h_cluster_counter, SizeT *h_core_point_counter, 
+            SizeT *h_noise_point_counter, SizeT knn_version){
+    
+    // Setup parameters
+    gunrock::util::Parameters parameters("snn");
+    gunrock::graphio::UseParameters(parameters);
+    gunrock::app::snn::UseParameters(parameters);
+    gunrock::app::UseParameters_test(parameters);
+    parameters.Parse_CommandLine(0, NULL);
+    parameters.Set("labels-file", labels);
+    parameters.Set("k", k);
+    parameters.Set("eps", eps);
+    parameters.Set("min-pts", min_pts);
+
+    // Creating points array from labels
+    gunrock::util::Array1D<SizeT, ValueT> points;
+    cudaError_t retval = cudaSuccess;
+    retval = gunrock::graphio::labels::Read(parameters, points);
+    if (retval){
+        gunrock::util::PrintMsg("Reading error\n");
+        printf("reading error\n");
+        return retval;
+    }
+   
+    printf("Reading dones\n");
+    // Check the input labels
+    SizeT num_points = parameters.Get<SizeT>("n");
+    SizeT dim = parameters.Get<SizeT>("dim");
+
+    if (k >= num_points){
+        printf("k = %d > num_points %d, dones\n", k, num_points);
+        return gunrock::util::GRError("k must be smaller than the number of labels", __FILE__, __LINE__);}
+
+    // Run KNN
+    SizeT* h_knns = (SizeT*) malloc(sizeof(SizeT)*num_points*k);
+    gunrock::app::snn::RunKNN(parameters, knn_version, num_points, 
+        dim, k, points, h_knns);
+
+        for (int i=0; i<num_points; ++i){
+            printf("%d: ", i);
+            for (int j=0; j<k; ++j){
+                printf("%d ", h_knns[i*k +j]);
+            }
+            printf("\n");
+        }
+
+    // Run SNN
+    typedef typename gunrock::app::TestGraph<
+        VertexT, SizeT, ValueT, gunrock::graph::HAS_CSR> GraphT;
+    GraphT graph;
+    gunrock::app::snn::RunTests(parameters, graph, num_points, k, 
+                                eps, min_pts, h_knns, h_cluster, (SizeT*)NULL,
+                                h_core_point_counter, (SizeT*)NULL,
+                                h_noise_point_counter, (SizeT*)NULL,
+                                h_cluster_counter, (SizeT*)NULL, 
+                                gunrock::util::DEVICE);
+
+    printf("Core Points: %d\n", *h_core_point_counter);
+    printf("Noise Points: %d\n", *h_noise_point_counter);
+    printf("Cluster Counter: %d\n", *h_cluster_counter);
+    
 }
 
 /*
@@ -387,11 +423,14 @@ double snn(const char* labels, const SizeT k,
  * @param[out]  noise_points_counter Return the number of noise points
  * \return      double               Return accumulated elapsed times for all runs
  */
-double snn(const char* labels_file, const int k, const int eps, 
-            const int min_pts, int *clusters, int *clusters_counter, 
-            int *core_points_counter, int *noise_points_counter){
-    return snn(labels_file, k, eps, min_pts, clusters, *clusters_counter, 
-                *core_points_counter, *noise_points_counter, 1); 
+double snn(const char* labels_file, const int* k, const int* eps, 
+            const int* min_pts, int *clusters, 
+            int *clusters_counter, int *core_points_counter, 
+            int *noise_points_counter){
+    printf("call snn %s %d %d %d\n", labels_file, *k, *eps, *min_pts);
+    return snn(labels_file, *k, *eps, *min_pts, clusters, 
+                clusters_counter, core_points_counter, 
+                noise_points_counter, 1); 
 }
 
 // Leave this at the end of the file
