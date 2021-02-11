@@ -44,9 +44,11 @@ int main(int argc, char *argv[]) {
   }
 
   int* clusters = (int*) malloc(sizeof(int)*num_labels);
-  int clusters_counter = 0, noise_points_counter = 0, core_points_counter = 0;
+  int* clusters_counter = (int*) malloc(sizeof(int));       clusters_counter[0] = 0;
+  int* noise_points_counter = (int*) malloc(sizeof(int));   noise_points_counter[0] = 0;
+  int* core_points_counter = (int*) malloc(sizeof(int));    core_points_counter[0] = 0;
 
-  double elapsed = snn(labels, k, eps, min_pts, clusters, clusters_counter, 
+  double elapsed = snn(labels, &k, &eps, &min_pts, clusters, clusters_counter, 
   core_points_counter, noise_points_counter);
 
   return 0;
