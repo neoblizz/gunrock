@@ -18,6 +18,7 @@
 #include <gunrock/app/enactor_iteration.cuh>
 #include <gunrock/app/enactor_loop.cuh>
 #include <gunrock/oprtr/oprtr.cuh>
+#include <moderngpu/kernel_segsort.hxx>
 
 #include <gunrock/app/snn/snn_problem.cuh>
 #include <gunrock/app/snn/snn_helpers.cuh>
@@ -31,8 +32,8 @@
 #include <gunrock/app/knn/knn_enactor.cuh>
 #include <gunrock/app/knn/knn_test.cuh>
 
-#define SNN_ASSERT 1
-#define SNN_DEBUG 1
+#define SNN_ASSERT 0
+#define SNN_DEBUG 0
 #ifdef SNN_DEBUG
 #define debug(a...) printf(a)
 #else
@@ -117,140 +118,65 @@ struct snnIterationLoop : public IterationLoopBase<EnactorT, Use_FullQ | Push> {
     auto &offsets = data_slice.offsets;
     auto &knns_sorted = data_slice.knns_out;
 
-    cudaStream_t stream = 0;
+    auto stream = oprtr_parameters.stream;
+
     auto target = util::DEVICE;
-    //util::Array1D<SizeT, VertexT> *null_frontier = NULL;
     oprtr_parameters.advance_mode = "ALL_EDGES";
 
-#ifdef SNN_ASSERT
-    GUARD_CU(knns.ForAll(
-        [num_points, k, noise_points] __host__ __device__(SizeT * knns_,
-                                                          const SizeT &pos) {
-          for (int i = 0; i < num_points; ++i) {
-            for (int j = 0; j < k; ++j) {
-              assert(knns_[i * k + j] != i);
-            }
-          }
-        },
-        1, target, stream));
-#endif
+    // // Sort all the knns using CUB
+    // GUARD_CU2(util::SegmentedSort(knns, knns_sorted, num_points*k,
+    //             num_points, offsets, /* int begin_bit = */ 0, 
+    //             /* int end_bit = */ sizeof(SizeT) * 8,
+    //             stream, true), "Segmented sort faile.");
 
-#ifdef SNN_DEBUG
-    // DEBUG ONLY
-    GUARD_CU(knns.ForAll(
-        [num_points, k] __host__ __device__(SizeT * knns_, const SizeT &pos) {
-          debug("num_points %d, k %d, %d\n", num_points, k, sizeof(SizeT)*8);
-          debug("[knn_enactor] knn:\n");
-          for (int i = 0; i < num_points; ++i) {
-            debug("knn[%d]: ", i);
-            for (int j = 0; j < k; ++j) {
-              debug("%d ", knns_[i * k + j]);
-            }
-            debug("\n");
-          }
-        },
-        1, target, stream));
-
-    // DEBUG ONLY
     GUARD_CU(knns_sorted.ForAll(
-        [num_points, k] __host__ __device__(SizeT * knns_, const SizeT &pos) {
-          debug("[knn_enactor] knn:\n");
-          for (int i = 0; i < num_points; ++i) {
-            debug("knn[%d]: ", i);
-            for (int j = 0; j < k; ++j) {
-              debug("%d ", knns_[i * k + j]);
-            }
-            debug("\n");
-          }
-        },
-        1, target, stream));
-
-    // DEBUG ONLY
-    GUARD_CU(offsets.ForAll(
-        [num_points, k] __host__ __device__(SizeT * knns_, const SizeT &pos) {
-          debug("[knn_enactor] offsets:\n");
-          for (int i = 0; i <= num_points; ++i) {
-            debug("%d ", knns_[i]);
-          }
-          debug("\n");
-        },
-        1, target, stream));
-
-#endif
-
-    GUARD_CU2(cudaStreamSynchronize(stream), "cudaDeviceSynchronize failed.");
-    // Sort all the knns using CUB
-    GUARD_CU2(util::SegmentedSort(knns, knns_sorted, num_points*k,
-                num_points, offsets, /* int begin_bit = */ 0, 
-                /* int end_bit = */ sizeof(SizeT) * 8,
-                stream, true), "Segmented sort faile.");
-    // Do not remove cudaDeviceSynchronize, CUB is running on different stream and Device synchronization is required
-    GUARD_CU2(cudaStreamSynchronize(stream), "cudaDeviceSynchronize failed.");
-
-#ifdef SNN_DEBUG
-    GUARD_CU(knns_sorted.ForAll(
-        [num_points, k] __host__ __device__(SizeT * knns_, const SizeT &pos) {
-          auto i = pos / k;
-          auto j = pos % k;
-          assert(knns_[i * k + j] != i);
+        [knns] __host__ __device__(SizeT * knns_, const SizeT &pos) {
+          knns_[pos] = knns[pos];
         },
         num_points * k, target, stream));
-#endif
+    
+    GUARD_CU2(cudaStreamSynchronize(stream), "cudaDeviceSynchronize failed.");
 
-#ifdef SNN_DEBUG
-    // DEBUG ONLY
-    GUARD_CU(knns_sorted.ForAll(
-        [num_points, k] __host__ __device__(SizeT * knns_, const SizeT &pos) {
-          debug("[knn_enactor] knn:\n");
-          for (int i = 0; i < num_points; ++i) {
-            debug("knn[%d]: ", i);
-            for (int j = 0; j < k; ++j) {
-              debug("%d ", knns_[i * k + j]);
-            }
-            debug("\n");
-          }
-        },
-        1, target, stream));
-#endif
+    mgpu::segmented_sort(knns.GetPointer(util::DEVICE), num_points*k, offsets.GetPointer(util::DEVICE), 
+      num_points, mgpu::less_t<SizeT>(), *(oprtr_parameters.context));
 
+    cudaDeviceSynchronize();
+    
     // Fill out knns unsorted array if InvalidValues - needed to mark SNN
-    GUARD_CU(knns.ForAll(
+    GUARD_CU(knns_sorted.ForAll(
         [] __host__ __device__(SizeT * knns_, const SizeT &pos) {
           knns_[pos] = util::PreDefinedValues<SizeT>::InvalidValue;
         },
         num_points * k, target, stream));
-
-    // Find candidates for SNN
-    auto SNNcandidates_op = [k, knns_sorted] 
-    __host__ __device__(SizeT* knns_, const SizeT &pos) {
-      auto x = pos / k;
-      auto q = knns_sorted[x * k + (pos % k)];
-#pragma unroll  // all iterations are independent
-      for (int i = 0; i < k; ++i) {
-        if (knns_sorted[q * k + i] == x) {
-          knns_[x * k + (pos%k)] = i;
-          break;
-        }
-      }
-    };
     
     // Find density of each point
-    GUARD_CU(knns.ForAll(SNNcandidates_op, num_points * k, target, stream));
+    GUARD_CU(knns_sorted.ForAll([k, knns] 
+      __host__ __device__(SizeT* knns_, const SizeT &pos) {
+        auto x = pos / k;
+        auto q = knns[x * k + (pos % k)];
+        #pragma unroll  // all iterations are independent
+        for (int i = 0; i < k; ++i) {
+          if (knns[q * k + i] == x) {
+            knns_[x * k + (pos%k)] = i;
+            break;
+          }
+        }
+      }, num_points * k, target, stream));
  
     // SNN density of each point
-    auto density_op = [num_points, k, eps, min_pts, knns_sorted,
+    auto density_op = [num_points, k, eps, min_pts, knns,
                        snn_density, visited] 
     __host__ __device__(SizeT * knns_, const SizeT &pos) {
 //     for (int pos = 0; pos < k*num_points; ++pos){//     //uncomment for debug
       auto x = pos / k;
-      auto q = knns_sorted[x * k + (pos % k)];
+      auto q = knns[x * k + (pos % k)];
       auto snn_candidate = knns_[x * k + (pos % k)];
       if (!util::isValid(snn_candidate))
           return;
       // SNN candidate exists
       // Checking SNN similarity
       // knns are sorted, counting intersection of knns[x] and knns[q]
-      auto similarity = SNNsimilarity(x, q, knns_sorted, eps, k);
+      auto similarity = SNNsimilarity(x, q, knns, eps, k);
       //printf("similarity of %d and %d is %d, what about eps %d\n", x, q, similarity, eps);
       if (similarity > eps) {
           // x and q are SNN
@@ -264,21 +190,9 @@ struct snnIterationLoop : public IterationLoopBase<EnactorT, Use_FullQ | Push> {
     };
     
     // Find density of each point
-    GUARD_CU(knns.ForAll(density_op, num_points*k, target, stream));
+    GUARD_CU(knns_sorted.ForAll(density_op, num_points*k, target, stream));
 //    GUARD_CU(frontier.V_Q()->ForAll(density_op, 1, target, stream));         //uncomment for debug
     GUARD_CU2(cudaStreamSynchronize(stream), "cudaStreamSynchronize failed.");
-    
-#ifdef SNN_DEBUG
-    // DEBUG ONLY: write down densities:
-    GUARD_CU(snn_density.ForAll(
-        [num_points, k] __host__ __device__(SizeT * sd, const SizeT &pos) {
-          debug("snn densities: \n");
-          for (int i = 0; i < num_points; ++i) {
-            debug("density[%d] = %d\n", i, sd[i]);
-          }
-        },
-        1, target, stream));
-#endif
 
     // Mark core points, initialize clusters
     GUARD_CU(core_point_mark_0.ForAll(
@@ -314,58 +228,22 @@ struct snnIterationLoop : public IterationLoopBase<EnactorT, Use_FullQ | Push> {
 
     printf("GPU number of core points found: %d\n", core_points_counter[0]);
 
-#ifdef SNN_DEBUG
-    // DEBUG ONLY: write down core points
-    GUARD_CU(core_point_mark_0.ForAll(
-        [core_points_counter, core_points] __host__ __device__(
-            SizeT * cp, const SizeT &pos) {
-          SizeT cpc = core_points_counter[0];
-          debug("core pointes: \n");
-          for (int i = 0; i < cpc; ++i) {
-            debug("%d ", core_points[i]);
-          }
-          debug("\n");
-        },
-        1, target, stream));
-#endif
+
 
     // For each x - core point, remove neighbors q which are:
     // not core points, q >= x, not shared nearest neighbors
-    GUARD_CU(knns_sorted.ForAll(
-        [core_points, k, visited, snn_density, min_pts, knns] __host__ __device__(
+    GUARD_CU(knns.ForAll(
+        [core_points, k, visited, snn_density, min_pts, knns_sorted] __host__ __device__(
             SizeT * knns_, const SizeT &pos) {
           int x = core_points[pos/k];
           auto q = knns_[x * k + (pos%k)];
           if (!visited[q] || snn_density[q] < min_pts || 
-                  q >= x || !util::isValid(knns[x * k + (pos%k)])) {
+                  q >= x || !util::isValid(knns_sorted[x * k + (pos%k)])) {
             knns_[x * k + (pos%k)] = util::PreDefinedValues<SizeT>::InvalidValue;
-            knns[x * k + (pos%k)] = util::PreDefinedValues<SizeT>::InvalidValue;
+            knns_sorted[x * k + (pos%k)] = util::PreDefinedValues<SizeT>::InvalidValue;
           }
         },
         core_points_counter[0]*k, target, stream));
-/*
-    //DO NOT REMOVE - this part is rewriting neighbors which are in use to the front of array
-    GUARD_CU(knns_sorted.ForAll(
-        [core_points, k, visited, snn_density, min_pts, knns] __host__ __device__(
-            SizeT * knns_, const SizeT &pos) {
-          // only for core points
-          int x = core_points[pos];
-          int last = x * k;
-          for (int i = 0; i < k; ++i){
-            auto q = knns_[x * k + i];
-            if (util::isValid(q)){
-              knns_[last] = q;
-              knns[last] = knns[x * k + i];
-              ++last;
-            }
-          }
-          for (; last < x * k + k; ++last) {
-            knns_[last] = util::PreDefinedValues<SizeT>::InvalidValue;
-            knns[last] = util::PreDefinedValues<SizeT>::InvalidValue;
-          }
-        },
-        core_points_counter[0], target, stream));
-*/
 
     // Core points merging
     // On the beginning cluster_id[x] = x for each core point x
@@ -373,22 +251,22 @@ struct snnIterationLoop : public IterationLoopBase<EnactorT, Use_FullQ | Push> {
       
       // Build trees for i-th iteration
       auto build_trees_op =
-          [iter, k, core_points, knns_sorted] __host__ __device__(
+          [iter, k, core_points, knns] __host__ __device__(
               SizeT * cluster, const SizeT &pos) {
             auto x = core_points[pos];
             // q < x 
-            auto q = knns_sorted[x * k + iter]; 
+            auto q = knns[x * k + iter]; 
             if (!util::isValid(q)) return;
             auto cluster_q = Load<cub::LOAD_CG>(cluster + q);
             auto cluster_x = Load<cub::LOAD_CG>(cluster + x);
             if (cluster_q == cluster_x){
-                knns_sorted[x * k + iter] = util::PreDefinedValues<SizeT>::InvalidValue;
+                knns[x * k + iter] = util::PreDefinedValues<SizeT>::InvalidValue;
                 return;
             }
             if (cluster_x == x){
                 // only x is going to change cluster[x]
                 cluster[x] = cluster_q;
-                knns_sorted[x * k + iter] = util::PreDefinedValues<SizeT>::InvalidValue;
+                knns[x * k + iter] = util::PreDefinedValues<SizeT>::InvalidValue;
             }
           };
 
@@ -424,26 +302,26 @@ struct snnIterationLoop : public IterationLoopBase<EnactorT, Use_FullQ | Push> {
 
       // Mark to merge
       auto mark_to_merge_op =
-          [k, cluster_id, pairs_to_merge, iter, knns_sorted, flag, core_points] 
+          [k, cluster_id, pairs_to_merge, iter, knns, flag, core_points] 
           //__host__ __device__(const int &cos, const SizeT &pos) {
           __host__ __device__(SizeT * c_p, const SizeT &pos) {
             // x core point
             auto x = core_points[pos];
             // q < x 
-            auto q = knns_sorted[x * k + iter]; 
+            auto q = knns[x * k + iter]; 
             if (!util::isValid(q)) return;
             auto cluster_q = cluster_id[q];
             while (cluster_id[cluster_q] != cluster_q) cluster_q = cluster_id[cluster_q];
             auto cluster_x = cluster_id[x];
             while (cluster_id[cluster_x] != cluster_x) cluster_x = cluster_id[cluster_x];
             if (cluster_x == cluster_q){
-                knns_sorted[x * k + iter] = util::PreDefinedValues<SizeT>::InvalidValue;
+                knns[x * k + iter] = util::PreDefinedValues<SizeT>::InvalidValue;
             }else if (cluster_x > cluster_q){
                 // pairs_to_merge[cluster_x] = cluster_q
                 auto old = atomicCAS(pairs_to_merge + cluster_x, util::PreDefinedValues<SizeT>::InvalidValue, cluster_q);
                 if (!util::isValid(old)){
                     // Done! it is going to happend
-                    knns_sorted[x * k + iter] = util::PreDefinedValues<SizeT>::InvalidValue;
+                    knns[x * k + iter] = util::PreDefinedValues<SizeT>::InvalidValue;
                     flag[0] = 1;
                 }
             }else{
@@ -451,7 +329,7 @@ struct snnIterationLoop : public IterationLoopBase<EnactorT, Use_FullQ | Push> {
                 auto old = atomicCAS(pairs_to_merge + cluster_q, util::PreDefinedValues<SizeT>::InvalidValue, cluster_x);
                 if (!util::isValid(old)){
                     // Done! it is going to happend
-                    knns_sorted[x * k + iter] = util::PreDefinedValues<SizeT>::InvalidValue;
+                    knns[x * k + iter] = util::PreDefinedValues<SizeT>::InvalidValue;
                     flag[0] = 1;
                 }
             }
@@ -505,18 +383,6 @@ struct snnIterationLoop : public IterationLoopBase<EnactorT, Use_FullQ | Push> {
       }//iteration over number of core points
  
     }//iteration over k nearest neighbors
- 
-#ifdef SNN_DEBUG
-    // DEBUG ONLY: write down densities:
-    GUARD_CU(cluster_id.ForAll(
-        [num_points, k] __host__ __device__(SizeT * c_id, const SizeT &pos) {
-          debug("clusters after merging core points: \n");
-          for (int i = 0; i < num_points; ++i) {
-            debug("cluster[%d] = %d\n", i, c_id[i]);
-          }
-        },
-        1, target, stream));
-#endif
 
     debug("gpu noise points: ");
     // Assign other non-core and non-noise points to clusters
@@ -529,9 +395,9 @@ struct snnIterationLoop : public IterationLoopBase<EnactorT, Use_FullQ | Push> {
           SizeT counterMax = 0;
           SizeT max_y = util::PreDefinedValues<SizeT>::InvalidValue;
           for (int i = 0; i < k; ++i) {
-            SizeT y = knns_sorted[src * k + i];
+            SizeT y = knns[src * k + i];
             if (visited[y] && snn_density[y] >= min_pts) {
-              SizeT SNNsm = knns[src * k + i];
+              SizeT SNNsm = knns_sorted[src * k + i];
               if (util::isValid(SNNsm) && SNNsm > counterMax) {
                 counterMax = SNNsm;
                 max_y = y;
@@ -548,21 +414,9 @@ struct snnIterationLoop : public IterationLoopBase<EnactorT, Use_FullQ | Push> {
           }
         };
     debug("\n");
-    // Assign other non-core and non-noise points to clusters
-//    GUARD_CU(core_points.ForAll(clustering_op, num_points, target, stream));
-    GUARD_CU(core_points.ForAll(clustering_op, num_points, target, stream));
 
-#ifdef SNN_DEBUG
-    // DEBUG ONLY: write down densities:
-    GUARD_CU(cluster_id.ForAll(
-        [num_points, k] __host__ __device__(SizeT * c_id, const SizeT &pos) {
-          debug("clusters after adding non core points: \n");
-          for (int i = 0; i < num_points; ++i) {
-            debug("cluster[%d] = %d\n", i, c_id[i]);
-          }
-        },
-        1, target, stream));
-#endif
+    // Assign other non-core and non-noise points to clusters
+    GUARD_CU(core_points.ForAll(clustering_op, num_points, target, stream));
 
     return retval;
   }
