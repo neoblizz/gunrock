@@ -377,6 +377,14 @@ double snn(const char* labels, const SizeT k,
     SizeT num_points = parameters.Get<SizeT>("n");
     SizeT dim = parameters.Get<SizeT>("dim");
 
+    for (int i=0; i<num_points; ++i){
+        printf("%d: ", i);
+        for (int j=0; j<dim; ++j){
+            printf("%lf ", points[i*dim +j]);
+        }
+        printf("\n");
+    }
+
     if (k >= num_points){
         printf("k = %d > num_points %d, dones\n", k, num_points);
         return gunrock::util::GRError("k must be smaller than the number of labels", __FILE__, __LINE__);}
@@ -398,6 +406,12 @@ double snn(const char* labels, const SizeT k,
     typedef typename gunrock::app::TestGraph<
         VertexT, SizeT, ValueT, gunrock::graph::HAS_CSR> GraphT;
     GraphT graph;
+    // Result on GPU
+    h_cluster = (SizeT*)malloc(sizeof(SizeT) * num_points);
+    h_core_point_counter = (SizeT*)malloc(sizeof(SizeT));
+    h_noise_point_counter = (SizeT*)malloc(sizeof(SizeT));
+    h_cluster_counter = (SizeT*)malloc(sizeof(SizeT));
+
     gunrock::app::snn::RunTests(parameters, graph, num_points, k, 
                                 eps, min_pts, h_knns, h_cluster, (SizeT*)NULL,
                                 h_core_point_counter, (SizeT*)NULL,

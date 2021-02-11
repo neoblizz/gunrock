@@ -31,8 +31,8 @@
 #include <gunrock/app/knn/knn_enactor.cuh>
 #include <gunrock/app/knn/knn_test.cuh>
 
-//#define SNN_ASSERT 1
-//#define SNN_DEBUG 1
+#define SNN_ASSERT 1
+#define SNN_DEBUG 1
 #ifdef SNN_DEBUG
 #define debug(a...) printf(a)
 #else
@@ -117,7 +117,7 @@ struct snnIterationLoop : public IterationLoopBase<EnactorT, Use_FullQ | Push> {
     auto &offsets = data_slice.offsets;
     auto &knns_sorted = data_slice.knns_out;
 
-    cudaStream_t stream = oprtr_parameters.stream;
+    cudaStream_t stream = 0;
     auto target = util::DEVICE;
     //util::Array1D<SizeT, VertexT> *null_frontier = NULL;
     oprtr_parameters.advance_mode = "ALL_EDGES";
@@ -139,6 +139,7 @@ struct snnIterationLoop : public IterationLoopBase<EnactorT, Use_FullQ | Push> {
     // DEBUG ONLY
     GUARD_CU(knns.ForAll(
         [num_points, k] __host__ __device__(SizeT * knns_, const SizeT &pos) {
+          debug("num_points %d, k %d, %d\n", num_points, k, sizeof(SizeT)*8);
           debug("[knn_enactor] knn:\n");
           for (int i = 0; i < num_points; ++i) {
             debug("knn[%d]: ", i);
@@ -149,15 +150,42 @@ struct snnIterationLoop : public IterationLoopBase<EnactorT, Use_FullQ | Push> {
           }
         },
         1, target, stream));
+
+    // DEBUG ONLY
+    GUARD_CU(knns_sorted.ForAll(
+        [num_points, k] __host__ __device__(SizeT * knns_, const SizeT &pos) {
+          debug("[knn_enactor] knn:\n");
+          for (int i = 0; i < num_points; ++i) {
+            debug("knn[%d]: ", i);
+            for (int j = 0; j < k; ++j) {
+              debug("%d ", knns_[i * k + j]);
+            }
+            debug("\n");
+          }
+        },
+        1, target, stream));
+
+    // DEBUG ONLY
+    GUARD_CU(offsets.ForAll(
+        [num_points, k] __host__ __device__(SizeT * knns_, const SizeT &pos) {
+          debug("[knn_enactor] offsets:\n");
+          for (int i = 0; i <= num_points; ++i) {
+            debug("%d ", knns_[i]);
+          }
+          debug("\n");
+        },
+        1, target, stream));
+
 #endif
 
+    GUARD_CU2(cudaStreamSynchronize(stream), "cudaDeviceSynchronize failed.");
     // Sort all the knns using CUB
-    GUARD_CU(util::SegmentedSort(knns, knns_sorted, num_points*k,
+    GUARD_CU2(util::SegmentedSort(knns, knns_sorted, num_points*k,
                 num_points, offsets, /* int begin_bit = */ 0, 
                 /* int end_bit = */ sizeof(SizeT) * 8,
-                stream));
+                stream, true), "Segmented sort faile.");
     // Do not remove cudaDeviceSynchronize, CUB is running on different stream and Device synchronization is required
-    // GUARD_CU2(cudaStreamSynchronize(stream), "cudaDeviceSynchronize failed.");
+    GUARD_CU2(cudaStreamSynchronize(stream), "cudaDeviceSynchronize failed.");
 
 #ifdef SNN_DEBUG
     GUARD_CU(knns_sorted.ForAll(

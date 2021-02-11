@@ -122,11 +122,17 @@ struct main_struct {
 #ifdef SNN_DEBUG
     // Debug of points:
     debug("debug points\n");
+    if (typeid(ValueT) == typeid(double)) debug("doubles\n");
+    else if (typeid(ValueT) == typeid(float)) debug("float\n");
+    else if (typeid(ValueT) == typeid(long)) debug("long\n");
+    else if (typeid(ValueT) == typeid(int)) debug("int\n");
     for (SizeT i=0; i<num_points; ++i){
         debug("for point %d: ", i);
         for (SizeT j=0; j<dim; ++j){
             if (typeid(ValueT) == typeid(double))
                 debug("%lf ", points[i*dim + j]);
+            else if (typeid(ValueT) == typeid(float))
+                debug("%f ", points[i*dim + j]);
             else 
                 debug("%d ", points[i*dim + j]);
         }
@@ -234,7 +240,7 @@ struct main_struct {
     
     } 
 #ifdef SNN_DEBUG
-    for (SizeT x = 0; x < 100;/*num_points;*/ ++x){
+    for (SizeT x = 0; x < (100 < num_points ? 100 : num_points); ++x){
         debug("knn[%d]: ", x);
         for (int i = 0; i < k; ++i){
             debug("%d ", h_knns[x * k + i]);
